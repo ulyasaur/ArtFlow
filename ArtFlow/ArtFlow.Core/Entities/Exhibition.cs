@@ -25,6 +25,8 @@ namespace ArtFlow.Core.Entities
 
         public List<ExhibitionArtpiece> ExhibitionArtpieces { get; set; }
 
+        public List<Order> Orders { get; set; }
+
         public List<Room> Rooms { get; set; }
     }
 }

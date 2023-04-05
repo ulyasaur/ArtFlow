@@ -28,5 +28,7 @@ namespace ArtFlow.Core.Entities
 
         public DeliveryStatus Status { get; set; }
 
+        public List<State> States { get; set; }
+
     }
 }
