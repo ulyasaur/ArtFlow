@@ -26,6 +26,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\ArtFlow.BLL\ArtFlow.BLL.csproj" />
     <ProjectReference Include="..\ArtFlow.DAL\ArtFlow.DAL.csproj" />
   </ItemGroup>
 

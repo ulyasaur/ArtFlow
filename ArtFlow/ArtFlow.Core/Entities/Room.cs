@@ -13,12 +13,12 @@ namespace ArtFlow.Core.Entities
 
         public string Name { get; set; }
 
-        public int EshibitionId { get; set; }
+        public int ExhibitionId { get; set; }
 
         public Exhibition Exhibition { get; set; }
 
         public int NumberOfPieces { get; set; }
 
-        public List<RoomArtpiece> RoomArtpieces { get; set; }
+        public List<RoomArtpiece> RoomArtpieces { get; set; } = new List<RoomArtpiece>();
     }
 }

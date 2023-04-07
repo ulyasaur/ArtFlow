@@ -19,18 +19,20 @@ namespace ArtFlow.Core.Entities
 
         public string Description { get; set; }
 
-        public string AuthorId { get; set; }
+        public string AuthorName { get; set; }
 
-        public User Author { get; set; }
+        public string OwnerId { get; set; }
+
+        public User Owner { get; set; }
 
         public int KeepRecommendationId { get; set; }
 
-        public KeepRecommendation KeepRecommendation { get; set; }
+        public KeepRecommendation KeepRecommendation { get; set; } 
 
-        public List<RoomArtpiece> RoomArtpieces { get; set; }
+        public List<RoomArtpiece> RoomArtpieces { get; set; } = new List<RoomArtpiece>();
 
-        public List<ExhibitionArtpiece> ExhibitionArtpieces { get; set; }
+        public List<ExhibitionArtpiece> ExhibitionArtpieces { get; set; } = new List<ExhibitionArtpiece>();
 
-        public List<Order> Orders { get; set; }
+        public List<Order> Orders { get; set; } = new List<Order>();
     }
 }

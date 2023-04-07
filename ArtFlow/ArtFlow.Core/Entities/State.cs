@@ -17,7 +17,7 @@ namespace ArtFlow.Core.Entities
 
         public double Light { get; set; }
 
-        public DateTimeOffset CheckedOn { get; set; }
+        public DateTimeOffset CheckedOn { get; set; } = DateTimeOffset.Now;
 
         public int OrderId { get; set; }
 

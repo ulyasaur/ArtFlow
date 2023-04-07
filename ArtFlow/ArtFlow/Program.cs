@@ -1,7 +1,13 @@
 using ArtFlow.DAL;
 using ArtFlow.DAL.Abstractions;
 using ArtFlow.DAL.Entities;
+using ArtFlow.DAL.Photos.Abstractions;
+using ArtFlow.DAL.Photos;
 using Microsoft.EntityFrameworkCore;
+using ArtFlow.BLL.Abstractions;
+using ArtFlow.BLL.Services;
+using ArtFlow.Core.Entities;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,6 +22,23 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
                     appConfig.GetConnectionString("DefaultConnection")));
 
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
+
+builder.Services.AddScoped<IAccountService, AccountService>();
+builder.Services.AddScoped<IArtpieceService, ArtpieceService>();
+builder.Services.AddScoped<IExhibitionService, ExhibitionService>();
+builder.Services.AddScoped<IOrderService, OrderService>();
+builder.Services.AddScoped<IRoomService, RoomService>();
+builder.Services.AddScoped<IStateService, StateService>();
+builder.Services.AddScoped<ITokenService, TokenService>();
+builder.Services.AddScoped<IUserService, UserService>();
+
+builder.Services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+
+builder.Services.Configure<CloudinarySettings>(appConfig.GetSection("Cloudinary"));
+
+builder.Services.AddIdentity<User, IdentityRole>()
+    .AddDefaultTokenProviders()
+    .AddEntityFrameworkStores<ApplicationContext>();
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
