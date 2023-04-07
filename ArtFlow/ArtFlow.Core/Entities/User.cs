@@ -14,14 +14,14 @@ namespace ArtFlow.Core.Entities
 
         public string LastName { get; set; }
 
-        public List<Exhibition> Exhibitions { get; set; }
+        public List<Exhibition> Exhibitions { get; set; } = new List<Exhibition>();
 
-        public List<Artpiece> Artpieces { get; set; }
+        public List<Artpiece> Artpieces { get; set; } = new List<Artpiece>();
 
-        public List<Order> SellOrders { get; set; }
+        public List<Order> SellOrders { get; set; } = new List<Order>();
 
-        public List<Order> DeliveryOrders { get; set; }
+        public List<Order> DeliveryOrders { get; set; } = new List<Order>();
 
-        public List<Order> DriveOrders { get; set; }
+        public List<Order> DriveOrders { get; set; } = new List<Order>();
     }
 }

@@ -20,15 +20,21 @@ namespace ArtFlow.Core.Entities
 
         public User Customer { get; set; }
 
-        public string DriverId { get; set; }
+        public string? DriverId { get; set; }
 
-        public User Driver { get; set; }
+        public User? Driver { get; set; }
+
+        public int ArtpieceId { get; set; }
+
+        public Artpiece Artpiece { get; set; }
 
         public string Adress { get; set; }
 
         public DeliveryStatus Status { get; set; }
 
-        public List<State> States { get; set; }
+        public DateTimeOffset UpdatedOn { get; set; } 
+
+        public List<State> States { get; set; } = new List<State>();
 
     }
 }

@@ -3,6 +3,7 @@ using System;
 using ArtFlow.DAL;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ArtFlow.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20230406170245_AddedChangesMigration")]
+    partial class AddedChangesMigration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -220,7 +223,7 @@ namespace ArtFlow.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoomId"));
 
-                    b.Property<int>("ExhibitionId")
+                    b.Property<int>("EshibitionId")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
@@ -232,7 +235,7 @@ namespace ArtFlow.DAL.Migrations
 
                     b.HasKey("RoomId");
 
-                    b.HasIndex("ExhibitionId");
+                    b.HasIndex("EshibitionId");
 
                     b.ToTable("Rooms");
                 });
@@ -587,7 +590,7 @@ namespace ArtFlow.DAL.Migrations
                 {
                     b.HasOne("ArtFlow.Core.Entities.Exhibition", "Exhibition")
                         .WithMany("Rooms")
-                        .HasForeignKey("ExhibitionId")
+                        .HasForeignKey("EshibitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

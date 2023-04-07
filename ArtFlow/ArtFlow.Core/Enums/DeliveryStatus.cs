@@ -9,11 +9,13 @@ namespace ArtFlow.Core.Enums
     public enum DeliveryStatus
     {
         Registered,
-        ApprovedbySeller,
+        ApprovedbyOwner,
         Paid,
         ApprovedByDriver,
         InProgress,
         Delivered,
-        Declined
+        Declined,
+        Cancel,
+        Returned
     }
 }

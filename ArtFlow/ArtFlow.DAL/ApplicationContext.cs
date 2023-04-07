@@ -41,9 +41,9 @@ namespace ArtFlow.DAL
 
             builder.Entity<Artpiece>(a =>
             {
-                a.HasOne(u => u.Author)
+                a.HasOne(u => u.Owner)
                     .WithMany(a => a.Artpieces)
-                    .HasForeignKey(u => u.AuthorId);
+                    .HasForeignKey(u => u.OwnerId);
 
                 a.HasOne(k => k.KeepRecommendation)
                     .WithOne(a => a.Artpiece)
@@ -89,7 +89,7 @@ namespace ArtFlow.DAL
             {
                 r.HasOne(e => e.Exhibition)
                     .WithMany(r => r.Rooms)
-                    .HasForeignKey(e => e.EshibitionId);
+                    .HasForeignKey(e => e.ExhibitionId);
             });
 
             builder.Entity<RoomArtpiece>(ra =>

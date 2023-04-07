@@ -23,10 +23,10 @@ namespace ArtFlow.Core.Entities
 
         public string Adress { get; set; }
 
-        public List<ExhibitionArtpiece> ExhibitionArtpieces { get; set; }
+        public List<ExhibitionArtpiece> ExhibitionArtpieces { get; set; } = new List<ExhibitionArtpiece>();
 
-        public List<Order> Orders { get; set; }
+        public List<Order> Orders { get; set; } = new List<Order>();
 
-        public List<Room> Rooms { get; set; }
+        public List<Room> Rooms { get; set; } = new List<Room>();
     }
 }
