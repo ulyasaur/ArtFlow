@@ -54,9 +54,9 @@ namespace ArtFlow.BLL.Services
             throw new InvalidOperationException("Incorrect password");
         }
 
-        public async Task<bool> RegistrateAsync(User user, string password)
+        public async Task<bool> RegistrateAsync(User user, string role, string password)
         {
-            if (await IsThereSuchLoginAsync(user.UserName))
+            if (await IsThereSuchLoginAsync(user.Email))
             {
                 _logger.LogError("Validation exception user with such login already exists");
                 return false;
@@ -76,7 +76,7 @@ namespace ArtFlow.BLL.Services
 
             if (result.Succeeded)
             {
-                var defaultRole = await _roleManager.FindByNameAsync("User");
+                var defaultRole = await _roleManager.FindByNameAsync(role);
                 if (defaultRole != null)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, defaultRole.Name);
@@ -93,21 +93,7 @@ namespace ArtFlow.BLL.Services
 
         private async Task<bool> IsThereSuchLoginAsync(String login)
         {
-            return await _userManager.Users.AnyAsync(x => x.UserName == login);
-        }
-
-        public async Task<bool> ChangePasswordAsync(string username, string oldPassword, string newPassword)
-        {
-            User? user = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(username));
-
-            if (user is null)
-            {
-                throw new InvalidOperationException("User was not found.");
-            }
-
-            IdentityResult result = await _userManager.ChangePasswordAsync(user, oldPassword, newPassword);
-
-            return result.Succeeded;
+            return await _userManager.Users.AnyAsync(x => x.Email == login);
         }
     }
 }

@@ -8,6 +8,9 @@ using ArtFlow.BLL.Abstractions;
 using ArtFlow.BLL.Services;
 using ArtFlow.Core.Entities;
 using Microsoft.AspNetCore.Identity;
+using ArtFlow.Services.Abstractions;
+using ArtFlow.Services;
+using ArtFlow.Mapping;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +24,9 @@ builder.Services.AddDbContext<ApplicationContext>(options =>
                 options.UseNpgsql(
                     appConfig.GetConnectionString("DefaultConnection")));
 
+
+builder.Services.AddAutoMapper(typeof(MappingProfiles).Assembly);
+
 builder.Services.AddScoped(typeof(IBaseRepository<>), typeof(BaseRepository<>));
 
 builder.Services.AddScoped<IAccountService, AccountService>();
@@ -33,6 +39,7 @@ builder.Services.AddScoped<ITokenService, TokenService>();
 builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<IPhotoAccessor, PhotoAccessor>();
+builder.Services.AddScoped<IUserAccessor, UserAccessor>();
 
 builder.Services.Configure<CloudinarySettings>(appConfig.GetSection("Cloudinary"));
 

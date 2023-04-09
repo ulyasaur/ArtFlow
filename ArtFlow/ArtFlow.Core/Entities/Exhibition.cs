@@ -19,7 +19,9 @@ namespace ArtFlow.Core.Entities
 
         public User Organiser { get; set; }
 
-        public DateTimeOffset HostedOn { get; set; }
+        public DateTimeOffset StartDate { get; set; }
+
+        public DateTimeOffset EndDate { get; set; }
 
         public string Adress { get; set; }
 

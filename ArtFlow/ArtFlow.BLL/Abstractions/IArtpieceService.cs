@@ -12,7 +12,7 @@ namespace ArtFlow.BLL.Abstractions
     {
         Task<List<Artpiece>> GetAvailableArtpiecesAsync();
 
-        Task<List<Artpiece>> GetOwnerArtpiecesAsync(string authorId);
+        Task<List<Artpiece>> GetOwnerArtpiecesAsync(string ownerId);
 
         Task<List<Artpiece>> GetExhibitionArtpiecesAsync(int exhibitionId);
 

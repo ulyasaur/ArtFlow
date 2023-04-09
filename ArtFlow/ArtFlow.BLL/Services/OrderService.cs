@@ -19,17 +19,23 @@ namespace ArtFlow.BLL.Services
         private readonly IBaseRepository<Order> _orderRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IBaseRepository<Artpiece> _artpieceRepository;
+        private readonly IBaseRepository<Exhibition> _exhibitionRepository;
+        private readonly IBaseRepository<ExhibitionArtpiece> _exhibitionArtpieceRepository;
         private readonly IValidator<Order> _orderValidator;
         private readonly ILogger<OrderService> _logger;
 
         public OrderService(IBaseRepository<Order> orderRepository, 
             IBaseRepository<User> userRepository, 
             IBaseRepository<Artpiece> artpieceRepository, 
+            IBaseRepository<Exhibition> exhibitionRepository, 
+            IBaseRepository<ExhibitionArtpiece> exhibitionArtpieceRepository, 
             ILogger<OrderService> logger)
         {
             _orderRepository = orderRepository;
             _userRepository = userRepository;
             _artpieceRepository = artpieceRepository;
+            _exhibitionRepository = exhibitionRepository;
+            _exhibitionArtpieceRepository = exhibitionArtpieceRepository;
             _orderValidator = new OrderValidator();
             _logger = logger;
         }
@@ -82,6 +88,7 @@ namespace ArtFlow.BLL.Services
                 User seller = await this._userRepository.FindByIdAsync(order.SellerId);
                 User customer = await this._userRepository.FindByIdAsync(order.CustomerId);
                 Artpiece artpiece = await this._artpieceRepository.FindByIdAsync(order.ArtpieceId);
+                Exhibition exhibition = await this._exhibitionRepository.FindByIdAsync(order.ExhibitionId);
 
                 this._orderRepository.Add(order);
                 await this._orderRepository.SaveChangesAsync();
@@ -130,6 +137,7 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                    .Include(e => e.Exhibition)
                     .Where(o => o.Status == DeliveryStatus.ApprovedbyOwner)
                     .ToListAsync();
                 return orders;
@@ -157,9 +165,40 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                    .Include(e => e.Exhibition)
                     .Include(d => d.Driver)
                     .OrderByDescending(o => o.UpdatedOn)
                     .Where(o => o.DriverId.Equals(driverId))
+                    .ToListAsync();
+                return orders;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<List<Order>> GetExhibitionOrdersAsync(int exhibitionId)
+        {
+            if (exhibitionId <= 0)
+            {
+                throw new ArgumentNullException("Exhibition id must be greater than 0");
+            }
+
+            try
+            {
+                Exhibition exhibition = await this._exhibitionRepository.FindByIdAsync(exhibitionId);
+
+                List<Order> orders = await this._orderRepository
+                    .GetAll()
+                    .Include(s => s.Seller)
+                    .Include(c => c.Customer)
+                    .Include(a => a.Artpiece)
+                    .Include(e => e.Exhibition)
+                    .Include(d => d.Driver)
+                    .OrderByDescending(o => o.UpdatedOn)
+                    .Where(o => o.Exhibition.Equals(exhibitionId))
                     .ToListAsync();
                 return orders;
             }
@@ -185,6 +224,7 @@ namespace ArtFlow.BLL.Services
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
                     .Include(d => d.Driver)
+                    .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
                 return order;
@@ -213,6 +253,7 @@ namespace ArtFlow.BLL.Services
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
                     .Include(d => d.Driver)
+                    .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
                     .Where(o => o.CustomerId.Equals(organiserId))
                     .ToListAsync();
@@ -242,6 +283,7 @@ namespace ArtFlow.BLL.Services
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
                     .Include(d => d.Driver)
+                    .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
                     .Where(o => o.SellerId.Equals(ownerId))
                     .ToListAsync();
@@ -329,6 +371,16 @@ namespace ArtFlow.BLL.Services
 
                 this._orderRepository.Update(order);
                 await this._orderRepository.SaveChangesAsync();
+
+                Artpiece artpiece = await this._artpieceRepository.FindByIdAsync(order.ArtpieceId);
+                Exhibition exhibition = await this._exhibitionRepository.FindByIdAsync(order.ExhibitionId);
+
+                this._exhibitionArtpieceRepository.Add(new ExhibitionArtpiece
+                {
+                    ArtPieceId = order.ArtpieceId,
+                    ExhibitionId = order.ExhibitionId
+                });
+                await this._exhibitionArtpieceRepository.SaveChangesAsync();
 
             }
             catch (Exception ex)

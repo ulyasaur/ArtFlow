@@ -57,7 +57,7 @@ namespace ArtFlow.BLL.Services
                     .FirstOrDefaultAsync(r => r.RoomId == roomId);
                 Artpiece artpiece = await this._artpieceRepository.FindByIdAsync(artpieceId);
 
-                if(room.RoomArtpieces.Count == room.NumberOfPieces)
+                if(room.RoomArtpieces.Count == room.MaxNumberOfPieces)
                 {
                     throw new ArgumentException("Room is full, artpiece can not be added");
                 }

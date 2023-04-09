@@ -10,6 +10,8 @@ namespace ArtFlow.BLL.Abstractions
 {
     public interface IOrderService
     {
+        Task<List<Order>> GetExhibitionOrdersAsync(int exhibitionId);
+
         Task<List<Order>> GetOrganiserOrdersAsync(string organiserId);
 
         Task<List<Order>> GetOwnerOrdersAsync(string ownerId);

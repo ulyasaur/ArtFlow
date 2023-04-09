@@ -14,7 +14,8 @@ namespace ArtFlow.BLL.Validator
             return !string.IsNullOrWhiteSpace(entity.Name)
                 && !string.IsNullOrEmpty(entity.Description)
                 && !string.IsNullOrEmpty(entity.OrganiserId)
-                && !string.IsNullOrEmpty(entity.Adress);
+                && !string.IsNullOrEmpty(entity.Adress)
+                && entity.StartDate <= entity.EndDate;
         }
     }
 }

@@ -15,55 +15,18 @@ namespace ArtFlow.BLL.Services
     public class ExhibitionService : IExhibitionService
     {
         private readonly IBaseRepository<Exhibition> _exhibitionRepository;
-        private readonly IBaseRepository<Artpiece> _artpieceRepository;
-        private readonly IBaseRepository<ExhibitionArtpiece> _exhibitionArtpieceRepository;
         private readonly IBaseRepository<User> _userRepository;
         private readonly IValidator<Exhibition> _exhibitionValidator;
         private readonly ILogger<ExhibitionService> _logger;
 
         public ExhibitionService(IBaseRepository<Exhibition> exhibitionRepository, 
-            IBaseRepository<Artpiece> artpieceRepository, 
-            IBaseRepository<ExhibitionArtpiece> exhibitionArtpieceRepository, 
             IBaseRepository<User> userRepository, 
             ILogger<ExhibitionService> logger)
         {
             _exhibitionRepository = exhibitionRepository;
-            _artpieceRepository = artpieceRepository;
-            _exhibitionArtpieceRepository = exhibitionArtpieceRepository;
             _userRepository = userRepository;
             _logger = logger;
             _exhibitionValidator = new ExhibitionValidator();
-        }
-
-        public async Task AddArtpieceToExhibitionAsync(int exhibitionId, int artpieceId)
-        {
-            if (artpieceId <= 0)
-            {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
-            }
-
-            if (exhibitionId <= 0)
-            {
-                throw new ArgumentNullException("Exhibition id must be greater than 0");
-            }
-
-            try
-            {
-                Artpiece artpiece = await this._artpieceRepository.FindByIdAsync(artpieceId);
-                Exhibition exhibition = await this._exhibitionRepository.FindByIdAsync(exhibitionId);
-
-                this._exhibitionArtpieceRepository.Add(new ExhibitionArtpiece
-                {
-                    ArtPieceId = artpieceId,
-                    ExhibitionId = exhibitionId
-                });
-                await this._exhibitionArtpieceRepository.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                this._logger.LogError(ex.Message);
-                throw;
-            }
         }
 
         public async Task AddExhibitionAsync(Exhibition exhibition)
@@ -79,32 +42,6 @@ namespace ArtFlow.BLL.Services
 
                 this._exhibitionRepository.Add(exhibition);
                 this._exhibitionRepository.SaveChangesAsync();
-            }
-            catch (Exception ex)
-            {
-                this._logger.LogError(ex.Message);
-                throw;
-            }
-        }
-
-        public async Task DeleteArtpieceFromExhibitionAsync(int exhibitionId, int artpieceId)
-        {
-            if (artpieceId <= 0)
-            {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
-            }
-
-            if (exhibitionId <= 0)
-            {
-                throw new ArgumentNullException("Exhibition id must be greater than 0");
-            }
-
-            try
-            {
-                ExhibitionArtpiece exhibitionArtpiece = await this._exhibitionArtpieceRepository.FindByIdAsync(exhibitionId, artpieceId);
-
-                this._exhibitionArtpieceRepository.Remove(exhibitionArtpiece);
-                await this._exhibitionArtpieceRepository.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -208,7 +145,8 @@ namespace ArtFlow.BLL.Services
 
                 existingExhibition.Name = exhibition.Name;
                 existingExhibition.Description = exhibition.Description;
-                existingExhibition.HostedOn = exhibition.HostedOn;
+                existingExhibition.StartDate = exhibition.StartDate;
+                existingExhibition.EndDate = exhibition.EndDate;
                 existingExhibition.Adress = exhibition.Adress;
 
                 this._exhibitionRepository.Update(existingExhibition);

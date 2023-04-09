@@ -1,0 +1,138 @@
+﻿using ArtFlow.BLL.Abstractions;
+using ArtFlow.Core.Entities;
+using ArtFlow.ViewModels;
+using AutoMapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+
+namespace ArtFlow.Controllers
+{
+    [Route("api/[controller]")]
+    [ApiController]
+    public class RoomsController : ControllerBase
+    {
+        private readonly IRoomService _roomService;
+        private readonly IMapper _mapper;
+        private readonly ILogger<RoomsController> _logger;
+
+        public RoomsController(IRoomService roomService, 
+            IMapper mapper, 
+            ILogger<RoomsController> logger)
+        {
+            _roomService = roomService;
+            _mapper = mapper;
+            _logger = logger;
+        }
+
+        [HttpGet("exhibition/{exhibitionId}")]
+        public async Task<IActionResult> GetExhibitionRooms(int exhibitionId)
+        {
+            try
+            {
+                List<Room> rooms = await this._roomService.GetExhibitionRoomsAsync(exhibitionId);
+
+                List<RoomViewModel> roomViewModels = new List<RoomViewModel>();
+                this._mapper.Map(rooms, roomViewModels);
+
+                return Ok(roomViewModels);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpGet("{roomId}")]
+        public async Task<IActionResult> GetRoom(int roomId)
+        {
+            try
+            {
+                Room room = await this._roomService.GetRoomAsync(roomId);
+
+                RoomViewModel roomViewModel = new RoomViewModel();
+                this._mapper.Map(room, roomViewModel);
+
+                return Ok(roomViewModel);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddRoom(RoomAddViewModel roomAddViewModel)
+        {
+            try
+            {
+                Room room = new Room();
+                this._mapper.Map(roomAddViewModel, room);
+
+                await this._roomService.AddRoomAsync(room);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("{roomId}")]
+        public async Task<IActionResult> DeleteRoom(int roomId)
+        {
+            try
+            {
+                await this._roomService.DeleteRoomAsync(roomId);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("/{roomId}/{artpieceId}")]
+        public async Task<IActionResult> AddArtpieceToRoomRoom(int roomId, int artpieceId)
+        {
+            try
+            {
+                await this._roomService.AddArtpieceToRoomAsync(roomId, artpieceId);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpDelete("/{roomId}/{artpieceId}")]
+        public async Task<IActionResult> DeleteArtpieceFromRoomRoom(int roomId, int artpieceId)
+        {
+            try
+            {
+                await this._roomService.DeleteArtpieceFromRoomAsync(roomId, artpieceId);
+
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+    }
+}

@@ -17,7 +17,7 @@ namespace ArtFlow.Core.Entities
 
         public Exhibition Exhibition { get; set; }
 
-        public int NumberOfPieces { get; set; }
+        public int MaxNumberOfPieces { get; set; }
 
         public List<RoomArtpiece> RoomArtpieces { get; set; } = new List<RoomArtpiece>();
     }

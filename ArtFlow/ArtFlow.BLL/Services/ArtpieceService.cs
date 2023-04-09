@@ -176,7 +176,10 @@ namespace ArtFlow.BLL.Services
                     .Where(a => !a.Orders.Any() 
                         || a.Orders
                             .OrderByDescending(o => o.UpdatedOn)
-                            .FirstOrDefault().Status == DeliveryStatus.Returned)
+                            .FirstOrDefault().Status == DeliveryStatus.Returned
+                        || a.Orders
+                            .OrderByDescending(o => o.UpdatedOn)
+                            .FirstOrDefault().Status == DeliveryStatus.Declined)
                     .ToListAsync();
                 return artpieces;
             }
@@ -296,11 +299,9 @@ namespace ArtFlow.BLL.Services
                     .Include(k => k.KeepRecommendation)
                     .FirstOrDefaultAsync(a => a.ArtpieceId == artpieceDto.ArtpieceId);
 
-                existingArtpiece.ArtpieceId = artpiece.ArtpieceId;
                 existingArtpiece.Name = artpiece.Name;
                 existingArtpiece.Description = artpiece.Description;
                 existingArtpiece.AuthorName = artpiece.AuthorName;
-                existingArtpiece.OwnerId = artpiece.OwnerId;
                 existingArtpiece.KeepRecommendation.MinTemperature = artpieceDto.MinTemperature;
                 existingArtpiece.KeepRecommendation.MaxTemperature = artpieceDto.MaxTemperature;
                 existingArtpiece.KeepRecommendation.MinHumidity = artpieceDto.MinHumidity;

@@ -11,6 +11,10 @@ namespace ArtFlow.BLL.Abstractions
     {
         Task<bool> AddStateAsync(State state);
 
+        Task<bool> CheckLatestStateAsync(int orderId);
+
+        Task<List<State>> GetStatesForOrderAsync(int orderId);
+
         Task<State> GetLatestStateAsync(int orderId);
     }
 }

@@ -18,9 +18,5 @@ namespace ArtFlow.BLL.Abstractions
         Task UpdateExhibitionAsync(Exhibition exhibition);
 
         Task DeleteExhibitionAsync(int exhibitionId);
-
-        Task AddArtpieceToExhibitionAsync(int exhibitionId, int artpieceId);
-
-        Task DeleteArtpieceFromExhibitionAsync(int exhibitionId, int artpieceId);
 }
     }
