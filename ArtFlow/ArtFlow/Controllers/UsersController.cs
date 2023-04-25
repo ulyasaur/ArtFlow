@@ -3,6 +3,7 @@ using ArtFlow.Core.Entities;
 using ArtFlow.Services.Abstractions;
 using ArtFlow.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

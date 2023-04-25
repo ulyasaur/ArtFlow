@@ -1,33 +1,40 @@
 ﻿using ArtFlow.BLL.Abstractions;
 using ArtFlow.Core.Entities;
 using ArtFlow.Core.Enums;
+using ArtFlow.Services.Abstractions;
 using ArtFlow.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtFlow.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class OrdersController : ControllerBase
     {
         private readonly IOrderService _orderService;
+        private readonly IUserAccessor _userAccessor;
         private readonly IStateService _stateService;
         private readonly IMapper _mapper;
         private readonly ILogger<OrdersController> _logger;
 
         public OrdersController(IOrderService orderService, 
+            IUserAccessor userAccessor,
             IStateService stateService, 
             IMapper mapper, 
             ILogger<OrdersController> logger)
         {
             _orderService = orderService;
+            _userAccessor = userAccessor;
             _stateService = stateService;
             _mapper = mapper;
             _logger = logger;
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("exhibition/{exhibitionId}")]
         public async Task<IActionResult> GetExhibitionOrdersAsync(int exhibitionId)
         {
@@ -40,11 +47,14 @@ namespace ArtFlow.Controllers
 
                 foreach (var orderViewModel in orderViewModels)
                 {
-                    State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
-                    orderViewModel.LatestState = new StateViewModel();
-                    this._mapper.Map(state, orderViewModel.LatestState);
+                    if (orderViewModel.Status == DeliveryStatus.InProgress) 
+                    { 
+                        State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.LatestState = new StateViewModel();
+                        this._mapper.Map(state, orderViewModel.LatestState);
 
-                    orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                    }
                 }
 
                 return Ok(orderViewModels);
@@ -57,6 +67,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("organiser/{organiserId}")]
         public async Task<IActionResult> GetOrganiserOrdersAsync(string organiserId)
         {
@@ -69,11 +80,14 @@ namespace ArtFlow.Controllers
 
                 foreach (var orderViewModel in orderViewModels)
                 {
-                    State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
-                    orderViewModel.LatestState = new StateViewModel();
-                    this._mapper.Map(state, orderViewModel.LatestState);
+                    if (orderViewModel.Status == DeliveryStatus.InProgress)
+                    {
+                        State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.LatestState = new StateViewModel();
+                        this._mapper.Map(state, orderViewModel.LatestState);
 
-                    orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                    }
                 }
 
                 return Ok(orderViewModels);
@@ -86,6 +100,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "ArtOwner")]
         [HttpGet("owner/{ownerId}")]
         public async Task<IActionResult> GetOwnerOrdersAsync(string ownerId)
         {
@@ -98,11 +113,14 @@ namespace ArtFlow.Controllers
 
                 foreach (var orderViewModel in orderViewModels)
                 {
-                    State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
-                    orderViewModel.LatestState = new StateViewModel();
-                    this._mapper.Map(state, orderViewModel.LatestState);
+                    if (orderViewModel.Status == DeliveryStatus.InProgress)
+                    {
+                        State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.LatestState = new StateViewModel();
+                        this._mapper.Map(state, orderViewModel.LatestState);
 
-                    orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                    }
                 }
 
                 return Ok(orderViewModels);
@@ -115,6 +133,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Driver")]
         [HttpGet("driver/{driverId}")]
         public async Task<IActionResult> GetDriverOrdersInProgressAsync(string driverId)
         {
@@ -127,11 +146,14 @@ namespace ArtFlow.Controllers
 
                 foreach (var orderViewModel in orderViewModels)
                 {
-                    State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
-                    orderViewModel.LatestState = new StateViewModel();
-                    this._mapper.Map(state, orderViewModel.LatestState);
+                    if (orderViewModel.Status == DeliveryStatus.InProgress)
+                    {
+                        State state = await this._stateService.GetLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.LatestState = new StateViewModel();
+                        this._mapper.Map(state, orderViewModel.LatestState);
 
-                    orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                        orderViewModel.isStateOk = await this._stateService.CheckLatestStateAsync(orderViewModel.OrderId);
+                    }
                 }
 
                 return Ok(orderViewModels);
@@ -144,6 +166,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Driver")]
         [HttpGet("driver")]
         public async Task<IActionResult> GetDriverOrdersAvailableAsync()
         {
@@ -184,6 +207,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpPost]
         public async Task<IActionResult> AddOrderAsync(OrderAddViewModel orderAddViewModel)
         {
@@ -194,6 +218,7 @@ namespace ArtFlow.Controllers
 
                 order.Status = DeliveryStatus.Registered;
                 order.UpdatedOn = DateTimeOffset.UtcNow;
+                order.CustomerId = this._userAccessor.GetUserId();
 
                 await this._orderService.AddOrderAsync(order);
 
@@ -207,6 +232,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "ArtOwner")]
         [HttpPut("{orderId}/approve")]
         public async Task<IActionResult> ApproveOrderByOwnerAsync(int orderId)
         {
@@ -224,6 +250,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpPut("{orderId}/pay")]
         public async Task<IActionResult> SetOrderPaidAsync(int orderId)
         {
@@ -241,6 +268,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Driver")]
         [HttpPut("{orderId}/{driverId}/accept")]
         public async Task<IActionResult> AcceptOrderByDriverAsync(int orderId, string driverId)
         {
@@ -258,6 +286,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Driver")]
         [HttpPut("{orderId}/progress")]
         public async Task<IActionResult> SetOrderInProgressAsync(int orderId)
         {
@@ -275,6 +304,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Driver")]
         [HttpPut("{orderId}/deliver")]
         public async Task<IActionResult> SetOrderDeliveredAsync(int orderId)
         {
@@ -292,6 +322,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "ArtOwner")]
         [HttpPut("{orderId}/decline")]
         public async Task<IActionResult> SetOrderDeclinedAsync(int orderId)
         {
@@ -309,6 +340,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpPut("{orderId}/cancel")]
         public async Task<IActionResult> SetOrderCanceledAsync(int orderId)
         {
@@ -326,6 +358,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpPut("{orderId}/return")]
         public async Task<IActionResult> SetOrderReturnedAsync(int orderId)
         {

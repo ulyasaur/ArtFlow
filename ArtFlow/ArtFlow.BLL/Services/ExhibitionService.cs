@@ -41,7 +41,7 @@ namespace ArtFlow.BLL.Services
                 User organiser = await this._userRepository.FindByIdAsync(exhibition.OrganiserId);
 
                 this._exhibitionRepository.Add(exhibition);
-                this._exhibitionRepository.SaveChangesAsync();
+                await this._exhibitionRepository.SaveChangesAsync();
             }
             catch (Exception ex)
             {
@@ -136,8 +136,6 @@ namespace ArtFlow.BLL.Services
 
             try
             {
-                User organiser = await this._userRepository.FindByIdAsync(exhibition.OrganiserId);
-
                 Exhibition existingExhibition = await this._exhibitionRepository
                     .GetAll()
                     .AsNoTracking()

@@ -1,29 +1,36 @@
 ﻿using ArtFlow.BLL.Abstractions;
 using ArtFlow.Core.Entities;
+using ArtFlow.Services.Abstractions;
 using ArtFlow.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtFlow.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ExhibitionsController : ControllerBase
     {
         private readonly IExhibitionService _exhibitionService;
+        private readonly IUserAccessor _userAccessor;
         private readonly IMapper _mapper;
         private readonly ILogger<ExhibitionsController> _logger;
 
         public ExhibitionsController(IExhibitionService exhibitionService, 
+            IUserAccessor userAccessor,
             IMapper mapper, 
             ILogger<ExhibitionsController> logger)
         {
             _exhibitionService = exhibitionService;
+            _userAccessor = userAccessor;
             _mapper = mapper;
             _logger = logger;
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("organiser/{userId}")]
         public async Task<IActionResult> GetUserExhibitionsAsync(string userId)
         {
@@ -64,6 +71,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpPost]
         public async Task<IActionResult> AddExhibitionAsync(ExhibitionUpdateViewModel exhibitionUpdateViewModel)
         {
@@ -71,6 +79,8 @@ namespace ArtFlow.Controllers
             {
                 Exhibition exhibition = new Exhibition();
                 this._mapper.Map(exhibitionUpdateViewModel, exhibition);
+
+                exhibition.OrganiserId = this._userAccessor.GetUserId();
 
                 await this._exhibitionService.AddExhibitionAsync(exhibition);
 
@@ -84,6 +94,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpPut]
         public async Task<IActionResult> UpdateExhibitionAsync(ExhibitionUpdateViewModel exhibitionUpdateViewModel)
         {
@@ -104,6 +115,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpDelete]
         public async Task<IActionResult> DeleteExhibitionAsync(int exhibitionId)
         {

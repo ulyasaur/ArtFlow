@@ -13,8 +13,6 @@ namespace ArtFlow.BLL.Validators
         public bool Validate(Order entity)
         {
             return !string.IsNullOrEmpty(entity.Adress)
-                && !string.IsNullOrEmpty(entity.SellerId)
-                && !string.IsNullOrEmpty(entity.CustomerId)
                 && entity.ExhibitionId > 0
                 && entity.ArtpieceId > 0;
         }

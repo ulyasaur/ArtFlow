@@ -18,6 +18,17 @@ namespace ArtFlow.BLL.Services
         private readonly IBaseRepository<Artpiece> _artpieceRepository;
         private readonly ILogger<StateService> _logger;
 
+        public StateService(IBaseRepository<State> stateRepository, 
+            IBaseRepository<Order> orderRepository, 
+            IBaseRepository<Artpiece> artpieceRepository, 
+            ILogger<StateService> logger)
+        {
+            _stateRepository = stateRepository;
+            _orderRepository = orderRepository;
+            _artpieceRepository = artpieceRepository;
+            _logger = logger;
+        }
+
         public async Task<bool> AddStateAsync(State state)
         {
             if(state.OrderId <= 0)
@@ -27,7 +38,9 @@ namespace ArtFlow.BLL.Services
 
             try
             {
-                Order order = await this._orderRepository.FindByIdAsync(state.OrderId);
+                Order order = await this._orderRepository
+                    .GetAll()
+                    .FirstOrDefaultAsync(o => o.OrderId == state.OrderId);
 
                 this._stateRepository.Add(state);
                 await this._stateRepository.SaveChangesAsync();

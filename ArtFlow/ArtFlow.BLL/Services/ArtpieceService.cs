@@ -289,8 +289,6 @@ namespace ArtFlow.BLL.Services
 
             try
             {
-                User user = await this._userRepository.FindByIdAsync(artpiece.OwnerId);
-
                 Artpiece existingArtpiece = await this._artpieceRepository
                     .GetAll()
                     .AsNoTracking()

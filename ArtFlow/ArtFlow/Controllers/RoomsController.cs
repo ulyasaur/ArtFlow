@@ -2,11 +2,13 @@
 using ArtFlow.Core.Entities;
 using ArtFlow.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtFlow.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class RoomsController : ControllerBase
@@ -24,6 +26,7 @@ namespace ArtFlow.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("exhibition/{exhibitionId}")]
         public async Task<IActionResult> GetExhibitionRooms(int exhibitionId)
         {
@@ -44,6 +47,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("{roomId}")]
         public async Task<IActionResult> GetRoom(int roomId)
         {
@@ -64,6 +68,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpPost]
         public async Task<IActionResult> AddRoom(RoomAddViewModel roomAddViewModel)
         {
@@ -84,6 +89,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpDelete("{roomId}")]
         public async Task<IActionResult> DeleteRoom(int roomId)
         {
@@ -101,7 +107,8 @@ namespace ArtFlow.Controllers
             }
         }
 
-        [HttpPost("/{roomId}/{artpieceId}")]
+        [Authorize(Roles = "Organiser")]
+        [HttpPost("{roomId}/{artpieceId}")]
         public async Task<IActionResult> AddArtpieceToRoomRoom(int roomId, int artpieceId)
         {
             try
@@ -118,7 +125,8 @@ namespace ArtFlow.Controllers
             }
         }
 
-        [HttpDelete("/{roomId}/{artpieceId}")]
+        [Authorize(Roles = "Organiser")]
+        [HttpDelete("{roomId}/{artpieceId}")]
         public async Task<IActionResult> DeleteArtpieceFromRoomRoom(int roomId, int artpieceId)
         {
             try

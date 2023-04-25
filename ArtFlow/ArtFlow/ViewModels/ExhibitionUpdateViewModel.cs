@@ -8,8 +8,6 @@
 
         public string Description { get; set; }
 
-        public string OrganiserId { get; set; }
-
         public DateTimeOffset StartDate { get; set; }
 
         public DateTimeOffset EndDate { get; set; }

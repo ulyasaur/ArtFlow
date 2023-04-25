@@ -33,9 +33,9 @@ namespace ArtFlow.BLL.Services
             _logger = logger;
         }
 
-        public async Task<string> LoginAsync(string username, string password)
+        public async Task<string> LoginAsync(string email, string password)
         {
-            var logged = await _userManager.Users.FirstOrDefaultAsync(x => x.UserName.Equals(username));
+            var logged = await _userManager.Users.FirstOrDefaultAsync(x => x.Email.Equals(email));
 
             if (logged is null)
             {
@@ -76,7 +76,9 @@ namespace ArtFlow.BLL.Services
 
             if (result.Succeeded)
             {
-                var defaultRole = await _roleManager.FindByNameAsync(role);
+                var roles = await _roleManager.Roles.ToListAsync();
+                var defaultRole = roles.Find(r => r.Name == role);
+
                 if (defaultRole != null)
                 {
                     var roleResult = await _userManager.AddToRoleAsync(user, defaultRole.Name);

@@ -4,11 +4,13 @@ using ArtFlow.Core.Entities;
 using ArtFlow.Services.Abstractions;
 using ArtFlow.ViewModels;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ArtFlow.Controllers
 {
+    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class ArtpiecesController : ControllerBase
@@ -29,6 +31,7 @@ namespace ArtFlow.Controllers
             _logger = logger;
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("available")]
         public async Task<IActionResult> GetAvailableArtpiecesAsync()
         {
@@ -49,6 +52,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "ArtOwner")]
         [HttpGet("owner/{ownerId}")]
         public async Task<IActionResult> GetOwnerArtpiecesAsync(string ownerId)
         {
@@ -69,6 +73,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("exhibition/{exhibitionId}")]
         public async Task<IActionResult> GetExhibitionArtpiecesAsync(int exhibitionId)
         {
@@ -89,6 +94,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "Organiser")]
         [HttpGet("room/{roomId}")]
         public async Task<IActionResult> GetRoomArtpiecesAsync(int roomId)
         {
@@ -129,6 +135,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "ArtOwner")]
         [HttpPost]
         public async Task<IActionResult> AddArtpieceAsync([FromForm] ArtpieceAddViewModel artpieceAddViewModel)
         {
@@ -150,6 +157,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "ArtOwner")]
         [HttpPut]
         public async Task<IActionResult> UpdateArtpieceAsync(ArtpieceUpdateViewModel artpieceUpdateViewModel)
         {
@@ -171,6 +179,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize(Roles = "ArtOwner")]
         [HttpDelete("{artpieceId}")]
         public async Task<IActionResult> DeleteArtpieceAsync(int artpieceId)
         {

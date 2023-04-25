@@ -23,8 +23,8 @@ namespace ArtFlow.ViewModels
 
         public DateTimeOffset UpdatedOn { get; set; }
 
-        public bool isStateOk { get; set; }
+        public bool isStateOk { get; set; } = true;
 
-        public StateViewModel LatestState { get; set; }
+        public StateViewModel? LatestState { get; set; }
     }
 }

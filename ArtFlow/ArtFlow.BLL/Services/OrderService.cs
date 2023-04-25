@@ -85,9 +85,9 @@ namespace ArtFlow.BLL.Services
 
             try
             {
-                User seller = await this._userRepository.FindByIdAsync(order.SellerId);
                 User customer = await this._userRepository.FindByIdAsync(order.CustomerId);
                 Artpiece artpiece = await this._artpieceRepository.FindByIdAsync(order.ArtpieceId);
+                order.SellerId = artpiece.OwnerId;
                 Exhibition exhibition = await this._exhibitionRepository.FindByIdAsync(order.ExhibitionId);
 
                 this._orderRepository.Add(order);
@@ -137,6 +137,7 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
                     .Include(e => e.Exhibition)
                     .Where(o => o.Status == DeliveryStatus.ApprovedbyOwner)
                     .ToListAsync();
@@ -165,6 +166,7 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
                     .Include(e => e.Exhibition)
                     .Include(d => d.Driver)
                     .OrderByDescending(o => o.UpdatedOn)
@@ -195,10 +197,11 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
                     .Include(e => e.Exhibition)
                     .Include(d => d.Driver)
                     .OrderByDescending(o => o.UpdatedOn)
-                    .Where(o => o.Exhibition.Equals(exhibitionId))
+                    .Where(o => o.ExhibitionId.Equals(exhibitionId))
                     .ToListAsync();
                 return orders;
             }
@@ -223,6 +226,7 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
                     .Include(d => d.Driver)
                     .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
@@ -252,6 +256,7 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
                     .Include(d => d.Driver)
                     .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
@@ -282,6 +287,7 @@ namespace ArtFlow.BLL.Services
                     .Include(s => s.Seller)
                     .Include(c => c.Customer)
                     .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
                     .Include(d => d.Driver)
                     .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
