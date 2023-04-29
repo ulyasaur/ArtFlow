@@ -83,6 +83,10 @@ namespace ArtFlow.DAL
                 o.HasOne(u => u.Driver)
                     .WithMany(o => o.DriveOrders)
                     .HasForeignKey(u => u.DriverId);
+
+                o.HasOne(e => e.Exhibition)
+                    .WithMany(o => o.Orders)
+                    .HasForeignKey(e => e.ExhibitionId);
             });
 
             builder.Entity<Room>(r =>

@@ -13,7 +13,7 @@ namespace ArtFlow.BLL.Validator
         {
             return entity.MinTemperature < entity.MaxTemperature
                 && entity.MinHumidity < entity.MaxHumidity
-                && entity.MinLight < entity.MinLight;
+                && entity.MinLight < entity.MaxLight;
         }
     }
 }

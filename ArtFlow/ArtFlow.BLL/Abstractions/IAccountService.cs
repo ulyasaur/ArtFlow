@@ -11,6 +11,6 @@ namespace ArtFlow.BLL.Abstractions
     {
         Task<string> LoginAsync(string username, string password);
 
-        Task<bool> RegistrateAsync(User user, string password);
+        Task<bool> RegistrateAsync(User user, string role, string password);
     }
 }

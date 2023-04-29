@@ -27,7 +27,7 @@ namespace ArtFlow.BLL.Services
             _logger = logger;
         }
 
-        public async Task DeleteUserAsyncAsync(string userId)
+        public async Task DeleteUserAsync(string userId)
         {
             if (string.IsNullOrEmpty(userId))
             {
@@ -73,8 +73,33 @@ namespace ArtFlow.BLL.Services
                 throw;
             }
         }
+        public async Task<User> GetUserByEmailAsync(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new ArgumentNullException("Email must not be null");
+            }
 
-        public async Task UpdateUserAsyncAsync(User user)
+            try
+            {
+                User user = await _userRepository
+                    .GetAll()
+                    .Include(e => e.Exhibitions)
+                    .Include(a => a.Artpieces)
+                    .Include(s => s.SellOrders)
+                    .Include(d => d.DeliveryOrders)
+                    .Include(d => d.DriveOrders)
+                    .FirstOrDefaultAsync(u => u.Email.Equals(email));
+                return user;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task UpdateUserAsync(User user)
         {
             if (string.IsNullOrEmpty(user.Id))
             {

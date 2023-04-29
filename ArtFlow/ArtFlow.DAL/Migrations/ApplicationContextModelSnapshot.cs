@@ -38,9 +38,6 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("KeepRecommendationId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
@@ -78,7 +75,7 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("HostedOn")
+                    b.Property<DateTimeOffset>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -88,6 +85,9 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<string>("OrganiserId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("ExhibitionId");
 
@@ -170,7 +170,7 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<string>("DriverId")
                         .HasColumnType("text");
 
-                    b.Property<int?>("ExhibitionId")
+                    b.Property<int>("ExhibitionId")
                         .HasColumnType("integer");
 
                     b.Property<string>("SellerId")
@@ -223,12 +223,12 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("ExhibitionId")
                         .HasColumnType("integer");
 
+                    b.Property<int>("MaxNumberOfPieces")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
-
-                    b.Property<int>("NumberOfPieces")
-                        .HasColumnType("integer");
 
                     b.HasKey("RoomId");
 
@@ -564,9 +564,11 @@ namespace ArtFlow.DAL.Migrations
                         .WithMany("DriveOrders")
                         .HasForeignKey("DriverId");
 
-                    b.HasOne("ArtFlow.Core.Entities.Exhibition", null)
+                    b.HasOne("ArtFlow.Core.Entities.Exhibition", "Exhibition")
                         .WithMany("Orders")
-                        .HasForeignKey("ExhibitionId");
+                        .HasForeignKey("ExhibitionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ArtFlow.Core.Entities.User", "Seller")
                         .WithMany("SellOrders")
@@ -579,6 +581,8 @@ namespace ArtFlow.DAL.Migrations
                     b.Navigation("Customer");
 
                     b.Navigation("Driver");
+
+                    b.Navigation("Exhibition");
 
                     b.Navigation("Seller");
                 });

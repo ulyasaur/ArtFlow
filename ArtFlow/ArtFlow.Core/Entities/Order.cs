@@ -28,6 +28,10 @@ namespace ArtFlow.Core.Entities
 
         public Artpiece Artpiece { get; set; }
 
+        public int ExhibitionId { get; set; }
+
+        public Exhibition Exhibition { get; set; }
+
         public string Adress { get; set; }
 
         public DeliveryStatus Status { get; set; }

@@ -25,8 +25,6 @@ namespace ArtFlow.Core.Entities
 
         public User Owner { get; set; }
 
-        public int KeepRecommendationId { get; set; }
-
         public KeepRecommendation KeepRecommendation { get; set; } 
 
         public List<RoomArtpiece> RoomArtpieces { get; set; } = new List<RoomArtpiece>();
