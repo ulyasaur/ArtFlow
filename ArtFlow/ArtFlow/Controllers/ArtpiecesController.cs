@@ -116,7 +116,7 @@ namespace ArtFlow.Controllers
         }
 
         [HttpGet("{artpieceId}")]
-        public async Task<IActionResult> GetArtpieceAsync(int artpieceId)
+        public async Task<IActionResult> GetArtpieceAsync(string artpieceId)
         {
             try
             {
@@ -181,7 +181,7 @@ namespace ArtFlow.Controllers
 
         [Authorize(Roles = "ArtOwner")]
         [HttpDelete("{artpieceId}")]
-        public async Task<IActionResult> DeleteArtpieceAsync(int artpieceId)
+        public async Task<IActionResult> DeleteArtpieceAsync(string artpieceId)
         {
             try
             {

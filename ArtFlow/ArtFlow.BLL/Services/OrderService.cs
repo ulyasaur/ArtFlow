@@ -240,6 +240,36 @@ namespace ArtFlow.BLL.Services
             }
         }
 
+        public async Task<Order> GetOrderByArtpieceAsync(string artpieceId)
+        {
+            if (string.IsNullOrEmpty(artpieceId))
+            {
+                throw new ArgumentNullException("Artpiece id must not be null");
+            }
+
+            try
+            {
+                Order order = await this._orderRepository
+                    .GetAll()
+                    .Include(s => s.Seller)
+                    .Include(c => c.Customer)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
+                    .Include(d => d.Driver)
+                    .Include(e => e.Exhibition)
+                    .OrderByDescending(o => o.UpdatedOn)
+                    .FirstOrDefaultAsync(o => 
+                        o.ArtpieceId.Equals(artpieceId));
+
+                return order;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
         public async Task<List<Order>> GetOrganiserOrdersAsync(string organiserId)
         {
             if (string.IsNullOrWhiteSpace(organiserId))

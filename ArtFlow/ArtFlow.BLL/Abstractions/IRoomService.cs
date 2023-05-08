@@ -17,8 +17,8 @@ namespace ArtFlow.BLL.Abstractions
 
         Task DeleteRoomAsync(int roomId);
 
-        Task AddArtpieceToRoomAsync(int roomId, int artpieceId);
+        Task AddArtpieceToRoomAsync(int roomId, string artpieceId);
 
-        Task DeleteArtpieceFromRoomAsync(int roomId, int artpieceId);
+        Task DeleteArtpieceFromRoomAsync(int roomId, string artpieceId);
     }
 }

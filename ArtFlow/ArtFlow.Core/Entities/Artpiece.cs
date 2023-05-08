@@ -9,9 +9,9 @@ namespace ArtFlow.Core.Entities
 {
     public class Artpiece : IBaseEntity
     {
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
-        public string PhotoId { get; set; }
+        public string? PhotoId { get; set; }
 
         public Photo Photo { get; set; }
 

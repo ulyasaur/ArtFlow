@@ -10,6 +10,7 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -61,7 +62,7 @@ namespace ArtFlow.BLL.Services
                     MinLight = artpieceDto.MinLight,
                     MaxLight = artpieceDto.MaxLight
                 }
-            };
+            };            
 
             if(!this._artpieceValidator.Validate(artpiece))
             {
@@ -75,6 +76,17 @@ namespace ArtFlow.BLL.Services
 
             try
             {
+                string id;
+                Artpiece existing = new Artpiece();
+
+                do
+                {
+                    id = GenerateRandomString();
+                    existing = await this._artpieceRepository.FindByIdAsync(id);
+                } while (existing is not null);
+
+                artpiece.ArtpieceId = id;
+
                 User user = await this._userRepository.FindByIdAsync(artpiece.OwnerId);
 
                 artpiece.Photo = await this._photoAccessor.AddPhoto(artpieceDto.Photo);
@@ -89,11 +101,11 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task DeleteArtpieceAsync(int artpieceId)
+        public async Task DeleteArtpieceAsync(string artpieceId)
         {
-            if (artpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             try
@@ -110,11 +122,11 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task<Artpiece> GetArtpieceAsync(int artpieceId)
+        public async Task<Artpiece> GetArtpieceAsync(string artpieceId)
         {
-            if (artpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             try
@@ -248,9 +260,9 @@ namespace ArtFlow.BLL.Services
 
         public async Task UpdateArtpieceAsync(ArtpieceDto artpieceDto)
         {
-            if (artpieceDto.ArtpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceDto.ArtpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             if (artpieceDto.KeepRecommendationId <= 0)
@@ -315,6 +327,22 @@ namespace ArtFlow.BLL.Services
                 this._logger.LogError(ex.Message);
                 throw;
             }
+        }
+
+        public static string GenerateRandomString()
+        {
+            const string validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; StringBuilder sb = new StringBuilder();
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                byte[] uintBuffer = new byte[sizeof(uint)];
+                for (int i = 0; i < 8; i++)
+                {
+                    rng.GetBytes(uintBuffer);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0); int index = (int)(num % validChars.Length);
+                    sb.Append(validChars[index]);
+                }
+            }
+            return sb.ToString();
         }
     }
 }

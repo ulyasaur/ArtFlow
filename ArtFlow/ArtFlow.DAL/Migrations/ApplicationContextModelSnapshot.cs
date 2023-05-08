@@ -24,11 +24,8 @@ namespace ArtFlow.DAL.Migrations
 
             modelBuilder.Entity("ArtFlow.Core.Entities.Artpiece", b =>
                 {
-                    b.Property<int>("ArtpieceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArtpieceId"));
+                    b.Property<string>("ArtpieceId")
+                        .HasColumnType("text");
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
@@ -47,7 +44,6 @@ namespace ArtFlow.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhotoId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ArtpieceId");
@@ -101,8 +97,8 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("ExhibitionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ArtPieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtPieceId")
+                        .HasColumnType("text");
 
                     b.HasKey("ExhibitionId", "ArtPieceId");
 
@@ -119,8 +115,9 @@ namespace ArtFlow.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("KeepRecommendationId"));
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<double>("MaxHumidity")
                         .HasColumnType("double precision");
@@ -160,8 +157,9 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -242,8 +240,8 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .HasColumnType("text");
 
                     b.HasKey("RoomId", "ArtpieceId");
 
@@ -496,9 +494,7 @@ namespace ArtFlow.DAL.Migrations
 
                     b.HasOne("ArtFlow.Core.Entities.Photo", "Photo")
                         .WithMany()
-                        .HasForeignKey("PhotoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PhotoId");
 
                     b.Navigation("Owner");
 

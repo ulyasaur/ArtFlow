@@ -180,7 +180,8 @@ namespace ArtFlow.DAL.Migrations
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
                     OrganiserId = table.Column<string>(type: "text", nullable: false),
-                    HostedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    StartDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
+                    EndDate = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false),
                     Adress = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
@@ -198,20 +199,19 @@ namespace ArtFlow.DAL.Migrations
                 name: "Artpieces",
                 columns: table => new
                 {
-                    ArtpieceId = table.Column<int>(type: "integer", nullable: false)
-                        .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
+                    ArtpieceId = table.Column<string>(type: "text", nullable: false),
                     PhotoId = table.Column<string>(type: "text", nullable: false),
                     Name = table.Column<string>(type: "text", nullable: false),
                     Description = table.Column<string>(type: "text", nullable: false),
-                    AuthorId = table.Column<string>(type: "text", nullable: false),
-                    KeepRecommendationId = table.Column<int>(type: "integer", nullable: false)
+                    AuthorName = table.Column<string>(type: "text", nullable: false),
+                    OwnerId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Artpieces", x => x.ArtpieceId);
                     table.ForeignKey(
-                        name: "FK_Artpieces_AspNetUsers_AuthorId",
-                        column: x => x.AuthorId,
+                        name: "FK_Artpieces_AspNetUsers_OwnerId",
+                        column: x => x.OwnerId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
@@ -230,15 +230,15 @@ namespace ArtFlow.DAL.Migrations
                     RoomId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     Name = table.Column<string>(type: "text", nullable: false),
-                    EshibitionId = table.Column<int>(type: "integer", nullable: false),
-                    NumberOfPieces = table.Column<int>(type: "integer", nullable: false)
+                    ExhibitionId = table.Column<int>(type: "integer", nullable: false),
+                    MaxNumberOfPieces = table.Column<int>(type: "integer", nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Rooms", x => x.RoomId);
                     table.ForeignKey(
-                        name: "FK_Rooms_Exhibitions_EshibitionId",
-                        column: x => x.EshibitionId,
+                        name: "FK_Rooms_Exhibitions_ExhibitionId",
+                        column: x => x.ExhibitionId,
                         principalTable: "Exhibitions",
                         principalColumn: "ExhibitionId",
                         onDelete: ReferentialAction.Cascade);
@@ -249,7 +249,7 @@ namespace ArtFlow.DAL.Migrations
                 columns: table => new
                 {
                     ExhibitionId = table.Column<int>(type: "integer", nullable: false),
-                    ArtPieceId = table.Column<int>(type: "integer", nullable: false)
+                    ArtPieceId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -274,7 +274,7 @@ namespace ArtFlow.DAL.Migrations
                 {
                     KeepRecommendationId = table.Column<int>(type: "integer", nullable: false)
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
-                    ArtpieceId = table.Column<int>(type: "integer", nullable: false),
+                    ArtpieceId = table.Column<string>(type: "text", nullable: false),
                     MinTemperature = table.Column<double>(type: "double precision", nullable: false),
                     MaxTemperature = table.Column<double>(type: "double precision", nullable: false),
                     MinHumidity = table.Column<double>(type: "double precision", nullable: false),
@@ -301,11 +301,12 @@ namespace ArtFlow.DAL.Migrations
                         .Annotation("Npgsql:ValueGenerationStrategy", NpgsqlValueGenerationStrategy.IdentityByDefaultColumn),
                     SellerId = table.Column<string>(type: "text", nullable: false),
                     CustomerId = table.Column<string>(type: "text", nullable: false),
-                    DriverId = table.Column<string>(type: "text", nullable: false),
+                    DriverId = table.Column<string>(type: "text", nullable: true),
+                    ArtpieceId = table.Column<string>(type: "text", nullable: false),
+                    ExhibitionId = table.Column<int>(type: "integer", nullable: false),
                     Adress = table.Column<string>(type: "text", nullable: false),
                     Status = table.Column<int>(type: "integer", nullable: false),
-                    ArtpieceId = table.Column<int>(type: "integer", nullable: true),
-                    ExhibitionId = table.Column<int>(type: "integer", nullable: true)
+                    UpdatedOn = table.Column<DateTimeOffset>(type: "timestamp with time zone", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -314,7 +315,8 @@ namespace ArtFlow.DAL.Migrations
                         name: "FK_Orders_Artpieces_ArtpieceId",
                         column: x => x.ArtpieceId,
                         principalTable: "Artpieces",
-                        principalColumn: "ArtpieceId");
+                        principalColumn: "ArtpieceId",
+                        onDelete: ReferentialAction.Cascade);
                     table.ForeignKey(
                         name: "FK_Orders_AspNetUsers_CustomerId",
                         column: x => x.CustomerId,
@@ -325,8 +327,7 @@ namespace ArtFlow.DAL.Migrations
                         name: "FK_Orders_AspNetUsers_DriverId",
                         column: x => x.DriverId,
                         principalTable: "AspNetUsers",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                     table.ForeignKey(
                         name: "FK_Orders_AspNetUsers_SellerId",
                         column: x => x.SellerId,
@@ -337,7 +338,8 @@ namespace ArtFlow.DAL.Migrations
                         name: "FK_Orders_Exhibitions_ExhibitionId",
                         column: x => x.ExhibitionId,
                         principalTable: "Exhibitions",
-                        principalColumn: "ExhibitionId");
+                        principalColumn: "ExhibitionId",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -345,7 +347,7 @@ namespace ArtFlow.DAL.Migrations
                 columns: table => new
                 {
                     RoomId = table.Column<int>(type: "integer", nullable: false),
-                    ArtpieceId = table.Column<int>(type: "integer", nullable: false)
+                    ArtpieceId = table.Column<string>(type: "text", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -388,9 +390,9 @@ namespace ArtFlow.DAL.Migrations
                 });
 
             migrationBuilder.CreateIndex(
-                name: "IX_Artpieces_AuthorId",
+                name: "IX_Artpieces_OwnerId",
                 table: "Artpieces",
-                column: "AuthorId");
+                column: "OwnerId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Artpieces_PhotoId",
@@ -481,9 +483,9 @@ namespace ArtFlow.DAL.Migrations
                 column: "ArtpieceId");
 
             migrationBuilder.CreateIndex(
-                name: "IX_Rooms_EshibitionId",
+                name: "IX_Rooms_ExhibitionId",
                 table: "Rooms",
-                column: "EshibitionId");
+                column: "ExhibitionId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_States_OrderId",

@@ -22,6 +22,8 @@ namespace ArtFlow.BLL.Abstractions
 
         Task<Order> GetOrderAsync(int orderId);
 
+        Task<Order> GetOrderByArtpieceAsync(string artpieceId);
+
         Task AddOrderAsync(Order order);
 
         Task ApproveOrderByOwnerAsync(int orderId);

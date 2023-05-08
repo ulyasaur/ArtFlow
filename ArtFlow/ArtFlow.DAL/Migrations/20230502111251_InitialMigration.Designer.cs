@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ArtFlow.DAL.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    [Migration("20230405091504_InitialMigration")]
+    [Migration("20230502111251_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />
@@ -27,13 +27,10 @@ namespace ArtFlow.DAL.Migrations
 
             modelBuilder.Entity("ArtFlow.Core.Entities.Artpiece", b =>
                 {
-                    b.Property<int>("ArtpieceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .HasColumnType("text");
 
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArtpieceId"));
-
-                    b.Property<string>("AuthorId")
+                    b.Property<string>("AuthorName")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -41,10 +38,11 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("KeepRecommendationId")
-                        .HasColumnType("integer");
-
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("OwnerId")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -54,7 +52,7 @@ namespace ArtFlow.DAL.Migrations
 
                     b.HasKey("ArtpieceId");
 
-                    b.HasIndex("AuthorId");
+                    b.HasIndex("OwnerId");
 
                     b.HasIndex("PhotoId");
 
@@ -77,7 +75,7 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<DateTimeOffset>("HostedOn")
+                    b.Property<DateTimeOffset>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
                     b.Property<string>("Name")
@@ -87,6 +85,9 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<string>("OrganiserId")
                         .IsRequired()
                         .HasColumnType("text");
+
+                    b.Property<DateTimeOffset>("StartDate")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("ExhibitionId");
 
@@ -100,8 +101,8 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("ExhibitionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ArtPieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtPieceId")
+                        .HasColumnType("text");
 
                     b.HasKey("ExhibitionId", "ArtPieceId");
 
@@ -118,8 +119,9 @@ namespace ArtFlow.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("KeepRecommendationId"));
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<double>("MaxHumidity")
                         .HasColumnType("double precision");
@@ -159,18 +161,18 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("DriverId")
-                        .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int?>("ExhibitionId")
+                    b.Property<int>("ExhibitionId")
                         .HasColumnType("integer");
 
                     b.Property<string>("SellerId")
@@ -179,6 +181,9 @@ namespace ArtFlow.DAL.Migrations
 
                     b.Property<int>("Status")
                         .HasColumnType("integer");
+
+                    b.Property<DateTimeOffset>("UpdatedOn")
+                        .HasColumnType("timestamp with time zone");
 
                     b.HasKey("OrderId");
 
@@ -217,19 +222,19 @@ namespace ArtFlow.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("RoomId"));
 
-                    b.Property<int>("EshibitionId")
+                    b.Property<int>("ExhibitionId")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("MaxNumberOfPieces")
                         .HasColumnType("integer");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("NumberOfPieces")
-                        .HasColumnType("integer");
-
                     b.HasKey("RoomId");
 
-                    b.HasIndex("EshibitionId");
+                    b.HasIndex("ExhibitionId");
 
                     b.ToTable("Rooms");
                 });
@@ -239,8 +244,8 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .HasColumnType("text");
 
                     b.HasKey("RoomId", "ArtpieceId");
 
@@ -485,9 +490,9 @@ namespace ArtFlow.DAL.Migrations
 
             modelBuilder.Entity("ArtFlow.Core.Entities.Artpiece", b =>
                 {
-                    b.HasOne("ArtFlow.Core.Entities.User", "Author")
+                    b.HasOne("ArtFlow.Core.Entities.User", "Owner")
                         .WithMany("Artpieces")
-                        .HasForeignKey("AuthorId")
+                        .HasForeignKey("OwnerId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -497,7 +502,7 @@ namespace ArtFlow.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Author");
+                    b.Navigation("Owner");
 
                     b.Navigation("Photo");
                 });
@@ -545,9 +550,11 @@ namespace ArtFlow.DAL.Migrations
 
             modelBuilder.Entity("ArtFlow.Core.Entities.Order", b =>
                 {
-                    b.HasOne("ArtFlow.Core.Entities.Artpiece", null)
+                    b.HasOne("ArtFlow.Core.Entities.Artpiece", "Artpiece")
                         .WithMany("Orders")
-                        .HasForeignKey("ArtpieceId");
+                        .HasForeignKey("ArtpieceId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.HasOne("ArtFlow.Core.Entities.User", "Customer")
                         .WithMany("DeliveryOrders")
@@ -557,13 +564,13 @@ namespace ArtFlow.DAL.Migrations
 
                     b.HasOne("ArtFlow.Core.Entities.User", "Driver")
                         .WithMany("DriveOrders")
-                        .HasForeignKey("DriverId")
+                        .HasForeignKey("DriverId");
+
+                    b.HasOne("ArtFlow.Core.Entities.Exhibition", "Exhibition")
+                        .WithMany("Orders")
+                        .HasForeignKey("ExhibitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.HasOne("ArtFlow.Core.Entities.Exhibition", null)
-                        .WithMany("Orders")
-                        .HasForeignKey("ExhibitionId");
 
                     b.HasOne("ArtFlow.Core.Entities.User", "Seller")
                         .WithMany("SellOrders")
@@ -571,9 +578,13 @@ namespace ArtFlow.DAL.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Artpiece");
+
                     b.Navigation("Customer");
 
                     b.Navigation("Driver");
+
+                    b.Navigation("Exhibition");
 
                     b.Navigation("Seller");
                 });
@@ -582,7 +593,7 @@ namespace ArtFlow.DAL.Migrations
                 {
                     b.HasOne("ArtFlow.Core.Entities.Exhibition", "Exhibition")
                         .WithMany("Rooms")
-                        .HasForeignKey("EshibitionId")
+                        .HasForeignKey("ExhibitionId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

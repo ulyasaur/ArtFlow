@@ -375,5 +375,26 @@ namespace ArtFlow.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [AllowAnonymous]
+        [HttpGet("artpiece/{artpieceId}")]
+        public async Task<IActionResult> GetOrderByArtpieceAsync(string artpieceId)
+        {
+            try
+            {
+                Order order = await this._orderService.GetOrderByArtpieceAsync(artpieceId);
+
+                /*OrderViewModel orderViewModel = new OrderViewModel();
+                this._mapper.Map(order, orderViewModel);*/
+
+                return Ok(order.OrderId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }

@@ -10,7 +10,7 @@ namespace ArtFlow.BLL.DTOs
 {
     public class ArtpieceDto
     {
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
         public IFormFile Photo { get; set; }
 

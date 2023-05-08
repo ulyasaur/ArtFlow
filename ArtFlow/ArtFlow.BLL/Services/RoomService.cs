@@ -6,6 +6,7 @@ using ArtFlow.Core.Enums;
 using ArtFlow.DAL.Abstractions;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -37,16 +38,16 @@ namespace ArtFlow.BLL.Services
             _logger = logger;
         }
 
-        public async Task AddArtpieceToRoomAsync(int roomId, int artpieceId)
+        public async Task AddArtpieceToRoomAsync(int roomId, string artpieceId)
         {
             if (roomId <= 0)
             {
                 throw new ArgumentNullException("Room id must be greater than 0");
             }
 
-            if (artpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             try
@@ -97,16 +98,16 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task DeleteArtpieceFromRoomAsync(int roomId, int artpieceId)
+        public async Task DeleteArtpieceFromRoomAsync(int roomId, string artpieceId)
         {
             if (roomId <= 0)
             {
                 throw new ArgumentNullException("Room id must be greater than 0");
             }
 
-            if (artpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             try
