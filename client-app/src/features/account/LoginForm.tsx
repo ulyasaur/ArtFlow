@@ -20,7 +20,7 @@ interface Props {
 }
 
 export default observer(function LoginForm({setValue}: Props) {  
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { userStore } = useStore();
 
   return (

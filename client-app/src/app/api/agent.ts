@@ -6,6 +6,7 @@ import { Profile } from "../models/profile";
 import { User } from "../models/user";
 import { router } from "../router/router";
 import { store } from "../stores/store";
+import { Photo } from "../models/photo";
 
 axios.defaults.baseURL = "http://localhost:5244/api";
 
@@ -74,27 +75,15 @@ const Account = {
 
 const Profiles = {
     get: (username: string) => requests.get<Profile>(`/users/${username}`),
-    // toggleFollow: (targetId: string) => requests.put(`/user/${targetId}`, targetId),
-    // getFollowers: (targetId: string) => requests.get<User[]>(`/user/${targetId}/followers`),
-    // getFollowings: (observerId: string) => requests.get<User[]>(`/user/${observerId}/followings`),
     // getSearchedUsers: (search: string) => requests.get<User[]>(`/user/search/${search}`),
-    // updateProfile: (profile: Partial<Profile>) => requests.put(`/user`, profile),
-    // uploadProfilePicture: (file: Blob) => {
-    //     let formData = new FormData();
-    //     formData.append("File", file);
-    //     return axios.post<Photo>("/user/profilePicture", formData, {
-    //         headers: { "Content-Type": "multipart/form-data" }
-    //     });
-    // },
-    // uploadProfileBackground: (file: Blob) => {
-    //     let formData = new FormData();
-    //     formData.append("File", file);
-    //     return axios.post<Photo>("/user/profileBackground", formData, {
-    //         headers: { "Content-Type": "multipart/form-data" }
-    //     });
-    // },
-    // addTag: (tagId: number) => requests.post(`/user/tag/${tagId}`, tagId),
-    // deleteTag: (tagId: number) => requests.del(`/user/tag/${tagId}`)
+    updateProfile: (profile: Partial<Profile>) => requests.put(`/users`, profile),
+    uploadProfilePicture: (file: Blob) => {
+        let formData = new FormData();
+        formData.append("File", file);
+        return axios.post<Photo>("/users/profilePicture", formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+    }
 }
 
 

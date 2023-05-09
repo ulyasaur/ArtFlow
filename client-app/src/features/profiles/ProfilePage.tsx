@@ -7,7 +7,7 @@ import ProfileHeader from "./ProfileHeader";
 import { useTranslation } from "react-i18next";
 
 export default observer(function ProfilePage() {
-    const { t, i18n } = useTranslation();
+    const { t } = useTranslation();
     
     const { username } = useParams<string>();
     const { profileStore } = useStore();
@@ -15,7 +15,7 @@ export default observer(function ProfilePage() {
 
     useEffect(() => {
         loadProfile(username!);  
-    }, [username, profile?.id]);
+    }, [username, profile?.id, loadProfile]);
     
     if (loadingProfile) {
         return <LoadingComponent content={t("loading.profile").toString()} />

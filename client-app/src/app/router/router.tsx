@@ -4,6 +4,7 @@ import HomePage from "../../features/home/HomePage";
 import ProfilePage from "../../features/profiles/ProfilePage";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
+import SettingsPage from "../../features/profiles/SettingsPage";
 
 export const routes: RouteObject[] = [
     {
@@ -13,7 +14,8 @@ export const routes: RouteObject[] = [
             {
                 element: <RequireAuth />, children: [
                     { path: "profile/:username", element: <ProfilePage /> },
-                    { path: "home", element: <HomePage /> }
+                    { path: "home", element: <HomePage /> },
+                    { path: "settings", element: <SettingsPage /> },
                 ]
             },
             { path: 'not-found', element: <NotFound /> },

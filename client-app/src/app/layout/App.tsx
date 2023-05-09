@@ -12,7 +12,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useTranslation } from "react-i18next";
 
 function App() {
-  const { t, i18n } = useTranslation();
+  const { i18n } = useTranslation();
   const location = useLocation();
   const { userStore } = useStore();
   const [appLoaded, setAppLoaded] = useState(false);
@@ -28,7 +28,7 @@ function App() {
     } else {
       setAppLoaded(true);
     }
-  }, [userStore, appLoaded])
+  }, [userStore, appLoaded, i18n])
 
   if (!appLoaded) {
     return <LoadingComponent />

@@ -25,7 +25,9 @@
         "username": "Username",
         "email": "E-mail",
         "password": "Password",
-        "role": "Role"
+        "role": "Role",
+        "bio": "Bio",
+        "save": "Save changes"
     },
     "roles": {
       "ArtOwner": "Art Owner",
@@ -34,5 +36,14 @@
     },
     "profile": {
       "edit": "Edit profile"
+    },
+    "photo": {
+      "upload": "Upload image",
+      "add": "Add photo",
+      "resize": "Resize photo",
+      "preview": "Preview",
+      "drop": "Drop image here",
+      "ok": "OK",
+      "cancel": "Cancel"
     }
 }

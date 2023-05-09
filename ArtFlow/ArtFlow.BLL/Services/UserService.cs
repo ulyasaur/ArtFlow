@@ -3,6 +3,8 @@ using ArtFlow.BLL.Validator;
 using ArtFlow.BLL.Validators;
 using ArtFlow.Core.Entities;
 using ArtFlow.DAL.Abstractions;
+using ArtFlow.DAL.Photos.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
@@ -17,15 +19,18 @@ namespace ArtFlow.BLL.Services
     public class UserService : IUserService
     {
         private readonly IBaseRepository<User> _userRepository;
+        private readonly IPhotoAccessor _photoAccessor;
         private readonly UserManager<User> _userManager;
         private readonly IValidator<User> _userValidator;
         private readonly ILogger<UserService> _logger;
 
         public UserService(IBaseRepository<User> userRepository, 
+            IPhotoAccessor photoAccessor,
             UserManager<User> userManager,
             ILogger<UserService> logger)
         {
             _userRepository = userRepository;
+            _photoAccessor = photoAccessor;
             _userManager = userManager;
             _userValidator = new UserValidator();
             _logger = logger;
@@ -126,14 +131,49 @@ namespace ArtFlow.BLL.Services
 
                 existingUser.FirstName = user.FirstName;
                 existingUser.LastName = user.LastName;
+                existingUser.Bio = user.Bio;
 
-                this._userRepository .Update(existingUser);
+                this._userRepository.Update(existingUser);
                 await this._userRepository.SaveChangesAsync();
             }
             catch (Exception ex)
             {
                 this._logger.LogError(ex.Message);
                 throw;
+            }
+        }
+        public async Task<Photo> SetProfilePicture(string userId, IFormFile file)
+        {
+            if (string.IsNullOrEmpty(userId))
+            {
+                throw new ArgumentNullException("User id must not be null");
+            }
+
+            try
+            {
+                User user = await _userRepository
+                    .GetAll()
+                    .AsNoTracking()
+                    .Include(p => p.Photo)
+                    .FirstOrDefaultAsync(u => u.Id.Equals(userId));
+
+                Photo photo = await this._photoAccessor.AddPhoto(file);
+
+                if (user.Photo is not null)
+                {
+                    await this._photoAccessor.DeletePhoto(user.Photo.PhotoId);
+                }
+
+                user.Photo = photo;
+
+                this._userRepository.Update(user);
+
+                return photo;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
 

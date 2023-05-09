@@ -19,7 +19,7 @@ import { useTranslation } from 'react-i18next';
 export default observer(function HomePage() {
     const { t, i18n } = useTranslation();
     const [value, setValue] = useState("1");
-    const [checked, setChecked] = useState(localStorage.getItem("i18nextLng") == "uk");
+    const [checked, setChecked] = useState(localStorage.getItem("i18nextLng") === "uk");
     const { userStore } = useStore();
     const location = useLocation();
 

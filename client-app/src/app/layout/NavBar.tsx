@@ -1,7 +1,6 @@
-import { alpha, AppBar, Autocomplete, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputAdornment, Link, ListItemIcon, Menu, MenuItem, Stack, styled, Switch, TextField, Toolbar, Tooltip, Typography } from '@mui/material';
+import { alpha, AppBar, Autocomplete, Avatar, Box, Button, Container, Divider, Icon, IconButton, Link, ListItemIcon, Menu, MenuItem, Stack, styled, Switch, Toolbar, Tooltip, Typography } from '@mui/material';
 import logo from "../../assets/logo.png";
 import userPlaceholder from "../../assets/user.png";
-import SearchIcon from '@mui/icons-material/Search';
 import * as React from 'react';
 import { useStore } from '../stores/store';
 import PersonIcon from '@mui/icons-material/Person';
@@ -17,7 +16,7 @@ import { useTranslation } from 'react-i18next';
 function NavBar() {
   const { t, i18n } = useTranslation();
   const { userStore: { currentUser, isLoggedIn, logout } } = useStore();
-  const [checked, setChecked] = useState(localStorage.getItem("i18nextLng") == "uk");
+  const [checked, setChecked] = useState(localStorage.getItem("i18nextLng") === "uk");
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
 
@@ -41,38 +40,38 @@ function NavBar() {
     setAnchorElUser(null);
   };
 
-  const Search = styled('div')(({ theme }) => ({
-    position: 'relative',
-    borderColor: theme.palette.common.white,
-    borderRadius: theme.shape.borderRadius,
-    backgroundColor: alpha(theme.palette.common.white, 0.25),
-    '&:hover': {
-      backgroundColor: alpha(theme.palette.common.white, 0.5),
-    },
-    marginLeft: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing(1),
-      width: 'auto',
-    },
-  }));
+  // const Search = styled('div')(({ theme }) => ({
+  //   position: 'relative',
+  //   borderColor: theme.palette.common.white,
+  //   borderRadius: theme.shape.borderRadius,
+  //   backgroundColor: alpha(theme.palette.common.white, 0.25),
+  //   '&:hover': {
+  //     backgroundColor: alpha(theme.palette.common.white, 0.5),
+  //   },
+  //   marginLeft: 0,
+  //   width: '100%',
+  //   [theme.breakpoints.up('sm')]: {
+  //     marginLeft: theme.spacing(1),
+  //     width: 'auto',
+  //   },
+  // }));
 
-  const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
-    color: 'inherit',
-    '& .MuiInputBase-input': {
-      padding: theme.spacing(1, 1, 1, 0),
-      // vertical padding + font size from searchIcon
-      paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-      transition: theme.transitions.create('width'),
-      width: '100%',
-      [theme.breakpoints.up('sm')]: {
-        width: '16ch',
-        '&:focus': {
-          width: '20ch',
-        },
-      },
-    },
-  }));
+  // const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
+  //   color: 'inherit',
+  //   '& .MuiInputBase-input': {
+  //     padding: theme.spacing(1, 1, 1, 0),
+  //     // vertical padding + font size from searchIcon
+  //     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+  //     transition: theme.transitions.create('width'),
+  //     width: '100%',
+  //     [theme.breakpoints.up('sm')]: {
+  //       width: '16ch',
+  //       '&:focus': {
+  //         width: '20ch',
+  //       },
+  //     },
+  //   },
+  // }));
 
   return (
     <ThemeProvider theme={theme}>
@@ -193,7 +192,7 @@ function NavBar() {
                   >
                     <MenuItem onClick={() => {
                       handleCloseUserMenu();
-                      router.navigate(`profile/${currentUser?.username}`);
+                      router.navigate("/");
                     }}>
                       <ListItemIcon>
                         <PersonIcon fontSize="small" />

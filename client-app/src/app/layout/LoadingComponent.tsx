@@ -10,7 +10,7 @@ interface Props {
 }
 
 export default function LoadingComponent({ content }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
 
   return (
     <Suspense>

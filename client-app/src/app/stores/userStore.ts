@@ -77,15 +77,21 @@ export default class UserStore {
         }
     }
 
-    // setDisplayName = (displayName: string) => {
-    //     if (this.currentUser) {
-    //         this.currentUser.displayName = displayName;
-    //     }
-    // }
+    setFirstName = (firstName: string) => {
+        if (this.currentUser) {
+            this.currentUser.firstName = firstName;
+        }
+    }
 
-    // setImage = (photo: Photo) => {
-    //     if (this.currentUser) {
-    //         this.currentUser.image = photo;
-    //     }
-    // }
+    setLastNameName = (lastName: string) => {
+        if (this.currentUser) {
+            this.currentUser.lastName = lastName;
+        }
+    }
+
+    setImage = (photo: Photo) => {
+        if (this.currentUser) {
+            this.currentUser.image = photo;
+        }
+    }
 }

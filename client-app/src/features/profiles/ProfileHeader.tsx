@@ -4,7 +4,6 @@ import { observer } from "mobx-react-lite";
 import { theme } from "../../app/themes/theme";
 import { Profile } from "../../app/models/profile";
 import { useStore } from "../../app/stores/store";
-import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
 import { router } from "../../app/router/router";
 import backgroundPic from "../../assets/backgroud-picture.jpg";
@@ -15,7 +14,7 @@ interface Props {
 }
 
 export default observer(function ProfileHeader({ profile }: Props) {    
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
     const { userStore } = useStore();
     const { currentUser } = userStore;
 

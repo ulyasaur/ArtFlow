@@ -1,4 +1,5 @@
 ﻿using ArtFlow.Core.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,6 +17,8 @@ namespace ArtFlow.BLL.Abstractions
         Task<User> GetUserByEmailAsync(string email);
 
         Task UpdateUserAsync(User user);
+
+        Task<Photo> SetProfilePicture(string userId, IFormFile file);
 
         Task DeleteUserAsync(string userId);
 

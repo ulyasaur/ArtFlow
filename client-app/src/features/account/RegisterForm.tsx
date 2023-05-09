@@ -9,7 +9,7 @@ import Typography from '@mui/material/Typography';
 import Container from '@mui/material/Container';
 import { ThemeProvider } from '@mui/material/styles';
 import { theme } from "../../app/themes/theme";
-import { ErrorMessage, Field, Formik } from "formik";
+import { ErrorMessage, Formik } from "formik";
 import { useStore } from "../../app/stores/store";
 import { LoadingButton } from "@mui/lab";
 import FormTextField from "../../app/common/form/FormTextField";
@@ -22,7 +22,7 @@ interface Props {
 }
 
 export default observer(function RegisterForm({ setValue }: Props) {
-  const { t, i18n } = useTranslation();
+  const { t } = useTranslation();
   const { userStore } = useStore();
 
   return (
