@@ -14,6 +14,12 @@ namespace ArtFlow.Core.Entities
 
         public string LastName { get; set; }
 
+        public string Bio { get; set; }
+
+        public string? PhotoId { get; set; }
+
+        public Photo Photo { get; set; }
+
         public List<Exhibition> Exhibitions { get; set; } = new List<Exhibition>();
 
         public List<Artpiece> Artpieces { get; set; } = new List<Artpiece>();

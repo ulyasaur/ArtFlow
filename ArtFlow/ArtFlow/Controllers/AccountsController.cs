@@ -93,6 +93,8 @@ namespace ArtFlow.Controllers
 
                 this._mapper.Map(user, userViewModel);
 
+                userViewModel.Role = await this._userService.GetUserRoleAsync(userId);
+
                 return Ok(userViewModel);
             }
             catch (Exception ex)

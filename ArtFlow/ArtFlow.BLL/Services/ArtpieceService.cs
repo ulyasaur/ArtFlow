@@ -135,6 +135,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p =>  p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .FirstOrDefaultAsync(a => a.ArtpieceId == artpieceId);
 
@@ -162,6 +163,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .Where(a => a.OwnerId == ownerId)
                     .ToListAsync();
@@ -183,6 +185,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .Include(o => o.Orders)
                     .Where(a => !a.Orders.Any() 
@@ -217,6 +220,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .Include(ea => ea.ExhibitionArtpieces)
                     .Where(a => a.ExhibitionArtpieces.Any(ea => ea.ExhibitionId == exhibitionId))
@@ -245,6 +249,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .Include(ra => ra.RoomArtpieces)
                     .Where(a => a.RoomArtpieces.Any(ra => ra.RoomId == roomId))
@@ -306,6 +311,7 @@ namespace ArtFlow.BLL.Services
                     .AsNoTracking()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .FirstOrDefaultAsync(a => a.ArtpieceId == artpieceDto.ArtpieceId);
 

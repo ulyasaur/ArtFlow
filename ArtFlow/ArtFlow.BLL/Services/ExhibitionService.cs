@@ -83,6 +83,7 @@ namespace ArtFlow.BLL.Services
                 Exhibition exhibition = await this._exhibitionRepository
                     .GetAll()
                     .Include(u => u.Organiser)
+                        .ThenInclude(p => p.Photo)
                     .Include(ea => ea.ExhibitionArtpieces)
                     .Include(o => o.Orders)
                     .Include(r => r.Rooms)
@@ -108,6 +109,7 @@ namespace ArtFlow.BLL.Services
                 List<Exhibition> exhibitions = await this._exhibitionRepository
                     .GetAll()
                     .Include(u => u.Organiser)
+                        .ThenInclude(p => p.Photo)
                     .Include(ea => ea.ExhibitionArtpieces)
                     .Include(o => o.Orders)
                     .Include(r => r.Rooms)

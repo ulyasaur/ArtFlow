@@ -11,10 +11,14 @@ namespace ArtFlow.BLL.Abstractions
     {
         Task<User> GetUserByIdAsync(string userId);
 
+        Task<User> GetUserByUsernameAsync(string username);
+
         Task<User> GetUserByEmailAsync(string email);
 
         Task UpdateUserAsync(User user);
 
         Task DeleteUserAsync(string userId);
+
+        Task<string> GetUserRoleAsync(string userId);
     }
 }
