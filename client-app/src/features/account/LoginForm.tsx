@@ -13,12 +13,14 @@ import { useStore } from "../../app/stores/store";
 import { theme } from "../../app/themes/theme";
 import { LoadingButton } from "@mui/lab";
 import FormTextField from "../../app/common/form/FormTextField";
+import { useTranslation } from "react-i18next";
 
 interface Props {
   setValue: any;
 }
 
-export default observer(function LoginForm({setValue}: Props) {
+export default observer(function LoginForm({setValue}: Props) {  
+  const { t, i18n } = useTranslation();
   const { userStore } = useStore();
 
   return (
@@ -44,23 +46,23 @@ export default observer(function LoginForm({setValue}: Props) {
                   <LockOutlinedIcon />
                 </Avatar>
                 <Typography component="h1" variant="h5">
-                  Log in
+                  {t("login.login")}
                 </Typography>
                 <Box sx={{ mt: 3 }}>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <FormTextField
                         required
-                        label="Email"
-                        placeholder="Email"
+                        label={t("userform.email").toString()}
+                        placeholder={t("userform.email").toString()}
                         name="email"
                       />
                     </Grid>
                     <Grid item xs={12}>
                       <FormTextField
                         required
-                        label="Password"
-                        placeholder="Password"
+                        label={t("userform.password").toString()}
+                        placeholder={t("userform.password").toString()}
                         name="password"
                         type="password"
                       />
@@ -82,12 +84,12 @@ export default observer(function LoginForm({setValue}: Props) {
                     variant="contained"
                     sx={{ mt: 3, mb: 2 }}
                   >
-                    Log in
+                    {t("login.login-action")}
                   </LoadingButton>
                   <Grid container justifyContent="flex-end">
                     <Grid item>
                       <Link onClick={() => setValue("2")} variant="body2">
-                        Don't have an account? Sign up
+                        {t("login.signup")}
                       </Link>
                     </Grid>
                   </Grid>

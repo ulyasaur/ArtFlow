@@ -8,12 +8,14 @@ import placeholder from "../../assets/placeholder.png";
 import userPlaceHolder from "../../assets/user.png";
 import { router } from "../../app/router/router";
 import backgroundPic from "../../assets/backgroud-picture.jpg";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     profile: Profile;
 }
 
-export default observer(function ProfileHeader({ profile }: Props) {
+export default observer(function ProfileHeader({ profile }: Props) {    
+  const { t, i18n } = useTranslation();
     const { userStore } = useStore();
     const { currentUser } = userStore;
 
@@ -60,7 +62,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                                 @{profile.username}
                             </Typography>
                             <Typography color="textSecondary">
-                                {profile.role}
+                                {t("roles." + profile.role)}
                             </Typography>
                         </Grid>
                         <Grid
@@ -77,7 +79,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                                     variant="outlined"
                                     onClick={() => router.navigate("/settings")}
                                 >
-                                    Edit profile
+                                    {t("profile.edit")}
                                 </Button>
                                 : null }
 

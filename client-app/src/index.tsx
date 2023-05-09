@@ -5,6 +5,7 @@ import reportWebVitals from './reportWebVitals';
 import { StoreContext, store } from './app/stores/store';
 import { RouterProvider } from 'react-router-dom';
 import { router } from './app/router/router';
+import "../src/localisation/i18n.ts";
 
 const root = ReactDOM.createRoot(
   document.getElementById('root') as HTMLElement

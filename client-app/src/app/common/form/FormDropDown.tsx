@@ -1,5 +1,6 @@
 import { MenuItem, TextField } from "@mui/material";
 import { useField } from "formik";
+import { useTranslation } from "react-i18next";
 
 interface Props {
     placeholder: string;
@@ -10,6 +11,7 @@ interface Props {
 }
 
 export default function FormDropDown(props: Props) {
+    const { t, i18n } = useTranslation();
     const [field, meta] = useField(props.name);
 
     return (
@@ -24,7 +26,7 @@ export default function FormDropDown(props: Props) {
             >
                 {props.options.map((option) => (
                     <MenuItem key={option} value={option}>
-                        {option}
+                        {t("roles." + option)}
                     </MenuItem>
                 ))}
             </TextField>

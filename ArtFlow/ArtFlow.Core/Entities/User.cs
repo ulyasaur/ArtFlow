@@ -14,7 +14,7 @@ namespace ArtFlow.Core.Entities
 
         public string LastName { get; set; }
 
-        public string Bio { get; set; }
+        public string? Bio { get; set; }
 
         public string? PhotoId { get; set; }
 

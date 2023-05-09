@@ -56,9 +56,15 @@ namespace ArtFlow.BLL.Services
 
         public async Task<bool> RegistrateAsync(User user, string role, string password)
         {
-            if (await IsThereSuchLoginAsync(user.Email))
+            if (await IsThereSuchEmailAsync(user.Email))
             {
-                _logger.LogError("Validation exception user with such login already exists");
+                _logger.LogError("Validation exception user with such email already exists");
+                return false;
+            }
+
+            if (await IsThereSuchLoginAsync(user.UserName))
+            {
+                _logger.LogError("Validation exception user with such username already exists");
                 return false;
             }
 
@@ -93,9 +99,14 @@ namespace ArtFlow.BLL.Services
 
         }
 
-        private async Task<bool> IsThereSuchLoginAsync(String login)
+        private async Task<bool> IsThereSuchLoginAsync(string login)
         {
-            return await _userManager.Users.AnyAsync(x => x.Email == login);
+            return await _userManager.Users.AnyAsync(x => x.UserName.Equals(login));
+        }
+
+        private async Task<bool> IsThereSuchEmailAsync(string login)
+        {
+            return await _userManager.Users.AnyAsync(x => x.Email.Equals(login));
         }
     }
 }

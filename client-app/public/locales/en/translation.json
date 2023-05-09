@@ -1,0 +1,38 @@
+{
+    "navbar": {
+      "profile": "Profile",
+      "settings": "Settings",
+      "logout": "Log out",
+      "menu": "Open menu"
+    },
+    "loading": {
+      "profile": "Loading profile...",
+      "app": "Loading app..."
+    },
+    "login": {
+        "login": "Log in",
+        "login-action": "Log in",
+        "signup": "Don't have an account? Sign up"
+    },
+    "signup": {
+        "signup": "Sign up",
+        "signup-action": "Sign up",
+        "login": "Already have an account? Log in"
+    },
+    "userform": {
+        "firstName": "First name",
+        "lastName": "Last name",
+        "username": "Username",
+        "email": "E-mail",
+        "password": "Password",
+        "role": "Role"
+    },
+    "roles": {
+      "ArtOwner": "Art Owner",
+      "Organiser": "Organiser",
+      "Driver": "Driver"
+    },
+    "profile": {
+      "edit": "Edit profile"
+    }
+}

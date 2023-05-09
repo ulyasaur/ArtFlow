@@ -71,7 +71,7 @@ namespace ArtFlow.Controllers
                     return Ok();
                 }
 
-                return BadRequest("User with such email already exists");
+                return BadRequest("User with such email or username already exists");
             }
             catch (Exception ex)
             {

@@ -1,4 +1,4 @@
-import { alpha, AppBar, Autocomplete, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputAdornment, Link, ListItemIcon, Menu, MenuItem, styled, TextField, Toolbar, Tooltip, Typography } from '@mui/material';
+import { alpha, AppBar, Autocomplete, Avatar, Box, Button, Container, Divider, Icon, IconButton, InputAdornment, Link, ListItemIcon, Menu, MenuItem, Stack, styled, Switch, TextField, Toolbar, Tooltip, Typography } from '@mui/material';
 import logo from "../../assets/logo.png";
 import userPlaceholder from "../../assets/user.png";
 import SearchIcon from '@mui/icons-material/Search';
@@ -12,11 +12,26 @@ import { observer } from 'mobx-react-lite';
 import { Link as RouterLink } from "react-router-dom";
 import { router } from '../router/router';
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 function NavBar() {
+  const { t, i18n } = useTranslation();
   const { userStore: { currentUser, isLoggedIn, logout } } = useStore();
+  const [checked, setChecked] = useState(localStorage.getItem("i18nextLng") == "uk");
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
+
+  const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+    if (event.target.checked) {
+      i18n.changeLanguage('uk');
+      localStorage.setItem("i18nextLng", "uk");
+      setChecked(true);
+    } else {
+      i18n.changeLanguage('en');
+      localStorage.setItem("i18nextLng", "en");
+      setChecked(false);
+    }
+  }
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -112,19 +127,19 @@ function NavBar() {
                   </Link>
                 </Box>
 
-                <Search>
+                {/* <Search>
                   <StyledAutocomplete
                     renderInput={(params) => (
                       <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                         <TextField
-                        {...params} 
+                          {...params}
                           placeholder='Search...'
-                          variant="outlined" 
+                          variant="outlined"
                           size='small'
                           InputProps={{
                             startAdornment: (
                               <InputAdornment position="start">
-                                <SearchIcon sx={{color: "white"}}/>
+                                <SearchIcon sx={{ color: "white" }} />
                               </InputAdornment>
                             ),
                           }}
@@ -135,17 +150,27 @@ function NavBar() {
                     handleHomeEndKeys
                     onChange={async (event, value) => {
                       if (value) {
-                          if (typeof (value) === 'string') {
-                            router.navigate(`/search/${value}`);
-                          }
+                        if (typeof (value) === 'string') {
+                          router.navigate(`/search/${value}`);
+                        }
                       }
-                  }}
+                    }}
                   />
-                </Search>
+                </Search> */}
 
+                <Stack direction="row" alignItems="center">
+                  <Typography>EN</Typography>
+                  <Switch
+                    checked={checked}
+                    onChange={e => handleChecked(e)}
+                    color="default"
+                    size="medium"
+                  />
+                  <Typography>UA</Typography>
+                </Stack>
 
                 <Box sx={{ flexGrow: 0, padding: "2px" }}>
-                  <Tooltip title="Open settings">
+                  <Tooltip title={t("navbar.menu")}>
                     <IconButton onClick={handleOpenUserMenu}>
                       <Avatar alt={currentUser?.firstName + " " + currentUser?.lastName} src={currentUser?.image ? currentUser?.image?.url : userPlaceholder} />
                     </IconButton>
@@ -173,7 +198,7 @@ function NavBar() {
                       <ListItemIcon>
                         <PersonIcon fontSize="small" />
                       </ListItemIcon>
-                      Profile
+                      {t("navbar.profile")}
                     </MenuItem>
                     <Divider />
                     <MenuItem onClick={() => {
@@ -183,7 +208,7 @@ function NavBar() {
                       <ListItemIcon>
                         <Settings fontSize="small" />
                       </ListItemIcon>
-                      Settings
+                      {t("navbar.settings")}
                     </MenuItem>
                     <MenuItem
                       onClick={() => {
@@ -194,7 +219,7 @@ function NavBar() {
                       <ListItemIcon>
                         <Logout fontSize="small" />
                       </ListItemIcon>
-                      Logout
+                      {t("navbar.logout")}
                     </MenuItem>
                   </Menu>
                 </Box>

@@ -1,7 +1,8 @@
 export interface Auth {
     username?: string;
     email: string;
-    displayName?: string;
+    firstName?: string;
+    lastName?: string;
     role?: string;
     password: string;
 }

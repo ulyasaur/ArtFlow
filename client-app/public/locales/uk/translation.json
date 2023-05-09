@@ -1,0 +1,38 @@
+{
+  "navbar": {
+    "profile": "Профіль",
+    "settings": "Налаштування",
+    "logout": "Вийти",
+    "menu": "Відкрити меню"
+  },
+  "loading": {
+    "profile": "Завантаження профілю...",
+    "app": "Завантаження..."
+  },
+  "login": {
+    "login": "Вхід",
+    "login-action": "Увійти",
+    "signup": "Ще не маєте акаунту? Зареєструйтесь"
+  },
+  "signup": {
+    "signup": "Реєстрація",
+    "signup-action": "Зареєструватись",
+    "login": "Уже маєте акаунт? Увійдіть"
+  },
+  "userform": {
+    "firstName": "Ім'я",
+    "lastName": "Прізвище",
+    "username": "Username",
+    "email": "E-mail",
+    "password": "Пароль",
+    "role": "Роль"
+  },
+  "roles": {
+    "ArtOwner": "Власник експонатів",
+    "Organiser": "Організатор",
+    "Driver": "Водій"
+  },
+  "profile": {
+    "edit": "Редагувати профіль"
+  }
+}

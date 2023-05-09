@@ -6,7 +6,7 @@ import Grid from '@mui/material/Grid';
 import { ThemeProvider } from '@mui/material/styles';
 import { useState } from 'react';
 import RegisterForm from '../account/RegisterForm';
-import { Tab, Tabs } from '@mui/material';
+import { Stack, Switch, Tab, Tabs, Typography } from '@mui/material';
 import LoginForm from '../account/LoginForm';
 import { TabContext, TabPanel } from '@mui/lab';
 import { theme } from '../../app/themes/theme';
@@ -14,22 +14,60 @@ import { useStore } from '../../app/stores/store';
 import { Navigate, useLocation } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import backgroundPic from "../../assets/backgroud-picture.jpg";
+import { useTranslation } from 'react-i18next';
 
 export default observer(function HomePage() {
+    const { t, i18n } = useTranslation();
     const [value, setValue] = useState("1");
+    const [checked, setChecked] = useState(localStorage.getItem("i18nextLng") == "uk");
     const { userStore } = useStore();
     const location = useLocation();
+
+    const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.checked) {
+            i18n.changeLanguage('uk');
+            localStorage.setItem("i18nextLng", "uk");
+            setChecked(true);
+        } else {
+            i18n.changeLanguage('en');
+            localStorage.setItem("i18nextLng", "en");
+            setChecked(false);
+        }
+    }
 
     const handleChange = (event: React.SyntheticEvent, newValue: string) => {
         setValue(newValue);
     };
 
     if (userStore.isLoggedIn) {
-        return <Navigate to={`profile/${userStore.currentUser?.username}`} state={{from: location}} />
+        return <Navigate to={`profile/${userStore.currentUser?.username}`} state={{ from: location }} />
     }
 
     return (
         <ThemeProvider theme={theme}>
+            <Stack 
+            sx={{ 
+                position: 'absolute', 
+                marginLeft: "20px", 
+                marginTop: "10px",
+                backgroundColor: "hotpink", 
+                paddingLeft: "20px",
+                paddingRight: "20px",
+                borderRadius: "20px"
+                }} 
+                direction="row" 
+                alignItems="center"
+                >
+                <Typography color={"white"}>EN</Typography>
+                <Switch
+                    checked={checked}
+                    onChange={e => handleChecked(e)}
+                    color="default"
+                    size="medium"
+                />
+                <Typography color={"white"}>UA</Typography>
+            </Stack>
+
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />
                 <Grid
@@ -50,8 +88,8 @@ export default observer(function HomePage() {
                     <TabContext value={value}>
                         <Box sx={{ width: '100%', bgcolor: 'background.paper' }}>
                             <Tabs value={value} onChange={handleChange} centered>
-                                <Tab label="Log In" value="1" />
-                                <Tab label="Sign Up" value="2" />
+                                <Tab label={t("login.login")} value="1" />
+                                <Tab label={t("signup.signup")} value="2" />
                             </Tabs>
                         </Box>
                         <TabPanel value='1'><LoginForm setValue={setValue} /></TabPanel>
