@@ -5,6 +5,10 @@ import ProfilePage from "../../features/profiles/ProfilePage";
 import App from "../layout/App";
 import RequireAuth from "./RequireAuth";
 import SettingsPage from "../../features/profiles/SettingsPage";
+import ExhibitionList from "../../features/exhibitions/ExhibitionList";
+import RequireArtOwner from "./RequireArtOwner";
+import RequireDriver from "./RequireDriver";
+import RequireOrganiser from "./RequireOrganiser";
 
 export const routes: RouteObject[] = [
     {
@@ -16,6 +20,21 @@ export const routes: RouteObject[] = [
                     { path: "profile/:username", element: <ProfilePage /> },
                     { path: "home", element: <HomePage /> },
                     { path: "settings", element: <SettingsPage /> },
+                    {
+                        element: <RequireArtOwner />, children: [
+
+                        ]
+                    },
+                    {
+                        element: <RequireDriver />, children: [
+
+                        ]
+                    },
+                    {
+                        element: <RequireOrganiser />, children: [
+                            { path: "exhibitions", element: <ExhibitionList /> },
+                        ]
+                    }
                 ]
             },
             { path: 'not-found', element: <NotFound /> },

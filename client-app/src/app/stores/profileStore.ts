@@ -1,10 +1,10 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
-import { Profile } from "../models/profile";
 import { store } from "./store";
+import { User } from "../models/user";
 
 export default class ProfileStore {
-    profile: Profile | null = null;
+    profile: User | null = null;
     loadingProfile = false;
     uploading = false;
 
@@ -33,7 +33,7 @@ export default class ProfileStore {
         }
     }
 
-    updateProfile = async (profile: Partial<Profile>) => {
+    updateProfile = async (profile: Partial<User>) => {
         this.uploading = true;
 
         try {
@@ -47,7 +47,7 @@ export default class ProfileStore {
                     store.userStore.currentUser?.lastName) {
                     store.userStore.setFirstName(profile.lastName);
                 }
-                this.profile = { ...this.profile, ...profile as Profile };
+                this.profile = { ...this.profile, ...profile as User };
                 this.uploading = false;
             });
         } catch (error) {

@@ -6,7 +6,8 @@ export interface User {
     firstName: string;
     lastName: string;
     role: string;
-    image?: Photo;
+    image?: Photo;    
+    bio?: string;
 }
 
 export class User implements User {
@@ -15,11 +16,13 @@ export class User implements User {
         username: string, 
         firstName: string,
         lastName: string,
-        image?: Photo){
+        image?: Photo,
+        bio?: string){
             this.id = id;
             this.username = username;
             this.firstName = firstName;
             this.lastName = lastName;
             this.image = image;
+            this.bio = bio;
     }
 }

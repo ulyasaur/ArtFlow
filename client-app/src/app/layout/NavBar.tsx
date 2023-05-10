@@ -110,6 +110,60 @@ function NavBar() {
 
             {isLoggedIn &&
               <>
+                {currentUser?.role === "Organiser" &&
+                  <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Link
+                      component={RouterLink}
+                      to={`/exhibitions`}
+                      sx={{
+                        color: "black", textDecoration: "none"
+                      }}
+                    >
+                      <Button
+                        sx={{ my: 2, color: 'white', display: 'block' }}
+                      >
+                        {t("navbar.exhibitions")}
+                      </Button>
+                    </Link>
+                  </Box>
+                }
+
+                {currentUser?.role === "ArtOwner" &&
+                  <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Link
+                      component={RouterLink}
+                      to={`/feed`}
+                      sx={{
+                        color: "black", textDecoration: "none"
+                      }}
+                    >
+                      <Button
+                        sx={{ my: 2, color: 'white', display: 'block' }}
+                      >
+                        {t("navbar.artpieces")}
+                      </Button>
+                    </Link>
+                  </Box>
+                }
+
+                {currentUser?.role === "Driver" &&
+                  <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                    <Link
+                      component={RouterLink}
+                      to={`/feed`}
+                      sx={{
+                        color: "black", textDecoration: "none"
+                      }}
+                    >
+                      <Button
+                        sx={{ my: 2, color: 'white', display: 'block' }}
+                      >
+                        {t("navbar.available")}
+                      </Button>
+                    </Link>
+                  </Box>
+                }
+
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                   <Link
                     component={RouterLink}
@@ -121,10 +175,11 @@ function NavBar() {
                     <Button
                       sx={{ my: 2, color: 'white', display: 'block' }}
                     >
-                      Feed
+                      {t("navbar.orders")}
                     </Button>
                   </Link>
                 </Box>
+
 
                 {/* <Search>
                   <StyledAutocomplete

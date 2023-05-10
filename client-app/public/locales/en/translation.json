@@ -3,11 +3,16 @@
       "profile": "Profile",
       "settings": "Settings",
       "logout": "Log out",
-      "menu": "Open menu"
+      "menu": "Open menu",
+      "orders": "My orders",
+      "exhibitions": "Exhibitions",
+      "artpieces": "Artpieces",
+      "available": "Available orders"
     },
     "loading": {
       "profile": "Loading profile...",
-      "app": "Loading app..."
+      "app": "Loading app...",
+      "exhibitions": "Loading exhibitions..."
     },
     "login": {
         "login": "Log in",
@@ -45,5 +50,8 @@
       "drop": "Drop image here",
       "ok": "OK",
       "cancel": "Cancel"
+    },
+    "exhibition": {
+      "add": "Add exhibition"
     }
 }

@@ -2,11 +2,11 @@ import axios, { AxiosError, AxiosHeaders, AxiosResponse } from "axios";
 import { toast } from "react-toastify";
 import { Auth } from "../models/auth";
 import AuthResponse from "../models/authResponse";
-import { Profile } from "../models/profile";
 import { User } from "../models/user";
 import { router } from "../router/router";
 import { store } from "../stores/store";
 import { Photo } from "../models/photo";
+import { Exhibition } from "../models/exhibition";
 
 axios.defaults.baseURL = "http://localhost:5244/api";
 
@@ -74,9 +74,8 @@ const Account = {
 }
 
 const Profiles = {
-    get: (username: string) => requests.get<Profile>(`/users/${username}`),
-    // getSearchedUsers: (search: string) => requests.get<User[]>(`/user/search/${search}`),
-    updateProfile: (profile: Partial<Profile>) => requests.put(`/users`, profile),
+    get: (username: string) => requests.get<User>(`/users/${username}`),
+    updateProfile: (profile: Partial<User>) => requests.put(`/users`, profile),
     uploadProfilePicture: (file: Blob) => {
         let formData = new FormData();
         formData.append("File", file);
@@ -86,10 +85,15 @@ const Profiles = {
     }
 }
 
+const Exhibitions = {
+    getExhibitions: (userId: string) => requests.get<Exhibition[]>(`/exhibitions/organiser/${userId}`)
+}
+
 
 const agent = {
     Account,
     Profiles,
+    Exhibitions
 };
 
 export default agent;

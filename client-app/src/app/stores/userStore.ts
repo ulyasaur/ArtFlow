@@ -44,6 +44,7 @@ export default class UserStore {
             });
 
             router.navigate(`/profile/${this.currentUser?.username}`);
+            window.location.reload();
         } catch (error) {
             console.log(error);
         }

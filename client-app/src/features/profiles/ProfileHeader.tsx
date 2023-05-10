@@ -2,19 +2,19 @@ import { ThemeProvider } from "@emotion/react";
 import { Avatar, Button, Card, CardContent, CardMedia, Grid, Typography } from "@mui/material";
 import { observer } from "mobx-react-lite";
 import { theme } from "../../app/themes/theme";
-import { Profile } from "../../app/models/profile";
 import { useStore } from "../../app/stores/store";
 import userPlaceHolder from "../../assets/user.png";
 import { router } from "../../app/router/router";
 import backgroundPic from "../../assets/backgroud-picture.jpg";
 import { useTranslation } from "react-i18next";
+import { User } from "../../app/models/user";
 
 interface Props {
-    profile: Profile;
+    profile: User;
 }
 
-export default observer(function ProfileHeader({ profile }: Props) {    
-  const { t } = useTranslation();
+export default observer(function ProfileHeader({ profile }: Props) {
+    const { t } = useTranslation();
     const { userStore } = useStore();
     const { currentUser } = userStore;
 
@@ -23,7 +23,8 @@ export default observer(function ProfileHeader({ profile }: Props) {
             <Card
                 sx={{
                     margin: "auto",
-                    width: "75vw"
+                    width: "75vw",
+                    minHeight: "89vh"
                 }}
             >
                 <Avatar
@@ -80,7 +81,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                                 >
                                     {t("profile.edit")}
                                 </Button>
-                                : null }
+                                : null}
 
                         </Grid>
                         <Grid
@@ -89,9 +90,13 @@ export default observer(function ProfileHeader({ profile }: Props) {
                                 paddingTop: "10px"
                             }}
                         >
-                            <Typography variant="h6" component="p">
-                                {profile.bio}
-                            </Typography>
+                            {profile.bio
+                                ? <Typography variant="h6" component="p">
+                                    {profile.bio}
+                                </Typography>
+                                : <Typography color="textSecondary" variant="h6" component="p">
+                                    {t("userform.bio")}
+                                </Typography>}
                         </Grid>
                     </Grid>
                 </CardContent>
