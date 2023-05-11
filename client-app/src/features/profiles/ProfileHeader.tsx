@@ -91,7 +91,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
                             }}
                         >
                             {profile.bio
-                                ? <Typography variant="h6" component="p">
+                                ? <Typography color="textSecondary" variant="h6" component="p">
                                     {profile.bio}
                                 </Typography>
                                 : <Typography color="textSecondary" variant="h6" component="p">

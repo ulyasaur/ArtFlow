@@ -29,7 +29,7 @@ namespace ArtFlow.BLL.Services
             _exhibitionValidator = new ExhibitionValidator();
         }
 
-        public async Task AddExhibitionAsync(Exhibition exhibition)
+        public async Task<Exhibition> AddExhibitionAsync(Exhibition exhibition)
         {
             if (!this._exhibitionValidator.Validate(exhibition))
             {
@@ -42,6 +42,18 @@ namespace ArtFlow.BLL.Services
 
                 this._exhibitionRepository.Add(exhibition);
                 await this._exhibitionRepository.SaveChangesAsync();
+
+                Exhibition ex = await this._exhibitionRepository
+                    .GetAll()
+                    .Include(u => u.Organiser)
+                        .ThenInclude(p => p.Photo)
+                    .Include(ea => ea.ExhibitionArtpieces)
+                    .Include(o => o.Orders)
+                    .Include(r => r.Rooms)
+                    .OrderByDescending(e => e.ExhibitionId)
+                    .FirstOrDefaultAsync(e => e.OrganiserId.Equals(exhibition.OrganiserId));
+
+                return ex;
             }
             catch (Exception ex)
             {
@@ -124,7 +136,7 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task UpdateExhibitionAsync(Exhibition exhibition)
+        public async Task<Exhibition> UpdateExhibitionAsync(Exhibition exhibition)
         {
             if (exhibition.ExhibitionId <= 0)
             {
@@ -151,6 +163,17 @@ namespace ArtFlow.BLL.Services
 
                 this._exhibitionRepository.Update(existingExhibition);
                 this._exhibitionRepository.SaveChangesAsync();
+
+                Exhibition ex = await this._exhibitionRepository
+                    .GetAll()
+                    .Include(u => u.Organiser)
+                        .ThenInclude(p => p.Photo)
+                    .Include(ea => ea.ExhibitionArtpieces)
+                    .Include(o => o.Orders)
+                    .Include(r => r.Rooms)
+                    .FirstOrDefaultAsync(e => e.ExhibitionId == exhibition.ExhibitionId);
+
+                return ex;
             }
             catch (Exception ex)
             {

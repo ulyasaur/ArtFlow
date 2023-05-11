@@ -1,57 +1,95 @@
 {
-    "navbar": {
-      "profile": "Profile",
-      "settings": "Settings",
-      "logout": "Log out",
-      "menu": "Open menu",
-      "orders": "My orders",
-      "exhibitions": "Exhibitions",
-      "artpieces": "Artpieces",
-      "available": "Available orders"
-    },
-    "loading": {
-      "profile": "Loading profile...",
-      "app": "Loading app...",
-      "exhibitions": "Loading exhibitions..."
-    },
-    "login": {
-        "login": "Log in",
-        "login-action": "Log in",
-        "signup": "Don't have an account? Sign up"
-    },
-    "signup": {
-        "signup": "Sign up",
-        "signup-action": "Sign up",
-        "login": "Already have an account? Log in"
-    },
-    "userform": {
-        "firstName": "First name",
-        "lastName": "Last name",
-        "username": "Username",
-        "email": "E-mail",
-        "password": "Password",
-        "role": "Role",
-        "bio": "Bio",
-        "save": "Save changes"
-    },
-    "roles": {
-      "ArtOwner": "Art Owner",
-      "Organiser": "Organiser",
-      "Driver": "Driver"
-    },
-    "profile": {
-      "edit": "Edit profile"
-    },
-    "photo": {
-      "upload": "Upload image",
-      "add": "Add photo",
-      "resize": "Resize photo",
-      "preview": "Preview",
-      "drop": "Drop image here",
-      "ok": "OK",
-      "cancel": "Cancel"
-    },
-    "exhibition": {
-      "add": "Add exhibition"
-    }
+  "navbar": {
+    "profile": "Profile",
+    "settings": "Settings",
+    "logout": "Log out",
+    "menu": "Open menu",
+    "orders": "My orders",
+    "exhibitions": "Exhibitions",
+    "artpieces": "Artpieces",
+    "available": "Available orders"
+  },
+  "loading": {
+    "profile": "Loading profile...",
+    "app": "Loading app...",
+    "exhibitions": "Loading exhibitions...",
+    "exhibition": "Loading exhibition..."
+  },
+  "login": {
+    "login": "Log in",
+    "login-action": "Log in",
+    "signup": "Don't have an account? Sign up"
+  },
+  "signup": {
+    "signup": "Sign up",
+    "signup-action": "Sign up",
+    "login": "Already have an account? Log in"
+  },
+  "userform": {
+    "firstName": "First name",
+    "lastName": "Last name",
+    "username": "Username",
+    "email": "E-mail",
+    "password": "Password",
+    "role": "Role",
+    "bio": "Bio",
+    "save": "Save changes"
+  },
+  "roles": {
+    "ArtOwner": "Art Owner",
+    "Organiser": "Organiser",
+    "Driver": "Driver"
+  },
+  "profile": {
+    "edit": "Edit profile"
+  },
+  "photo": {
+    "upload": "Upload image",
+    "add": "Add photo",
+    "resize": "Resize photo",
+    "preview": "Preview",
+    "drop": "Drop image here",
+    "ok": "OK",
+    "cancel": "Cancel"
+  },
+  "exhibition": {
+    "add": "Add exhibition",
+    "exhibition": "Exhibition",
+    "name": "Name",
+    "description": "Description",
+    "start": "Start date",
+    "end": "End date",
+    "adress": "Adress",
+    "time": "Time",
+    "about": "About"
+  },
+  "actions": {
+    "add": "Add",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save"
+  },
+  "months": {
+    "January": "January",
+    "February": "February",
+    "March": "March",
+    "April": "April",
+    "May": "May",
+    "June": "June",
+    "July": "July",
+    "August": "August",
+    "September": "September",
+    "October": "October",
+    "November": "November",
+    "December": "December"
+  },
+  "days": {
+    "Sun": "Sun",
+    "Mon": "Mon",
+    "Tue": "Tue",
+    "Wed": "Wed",
+    "Thu": "Thu",
+    "Fri": "Fri",
+    "Sat": "Sat"
+  }
 }

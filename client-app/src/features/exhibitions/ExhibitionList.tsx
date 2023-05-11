@@ -8,14 +8,15 @@ import { Avatar, Card, CardHeader, Divider, IconButton, ListItem, ListItemAvatar
 import { router } from "../../app/router/router";
 import FestivalIcon from '@mui/icons-material/Festival';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
-import formatDate from "../../app/formatting/formatDate";
 import AddIcon from '@mui/icons-material/Add';
+import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import formatDate from "../../app/formatting/formatDate";
 
 export default observer(function ExhibitionList() {
     const { t } = useTranslation();
     const { exhibitionStore, userStore } = useStore();
     const { currentUser } = userStore;
-    const { loading, exhibitions, loadExhibitions } = exhibitionStore;
+    const { loading, exhibitions, loadExhibitions, deleteExhibition } = exhibitionStore;
 
     useEffect(() => {
         loadExhibitions(currentUser!.id);
@@ -46,7 +47,7 @@ export default observer(function ExhibitionList() {
                     }}
                     action={
                         <Tooltip title={t("exhibition.add")} >
-                            <IconButton onClick={() => router.navigate("post/create")}>
+                            <IconButton onClick={() => router.navigate("/exhibitions/add")}>
                                 <AddIcon fontSize="large" sx={{ color: "white" }} />
                             </IconButton>
                         </Tooltip>
@@ -56,24 +57,31 @@ export default observer(function ExhibitionList() {
                 {
                     exhibitions.map(exhibition =>
                         <>
-                            <ListItem>
+                            <ListItem
+                                key={exhibition.exhibitionId}
+                                secondaryAction={
+                                    <IconButton onClick={() => deleteExhibition(exhibition.exhibitionId)}>
+                                        <DeleteOutlineIcon />
+                                    </IconButton>                                    
+                                }
+                            >
                                 <ListItemAvatar
-                                //onClick={() => router.navigate(`/profile/${user.username}`)}
+                                onClick={() => router.navigate(`/exhibition/${exhibition.exhibitionId}`)}
                                 >
                                     <Avatar>
                                         <FestivalIcon />
                                     </Avatar>
                                 </ListItemAvatar>
                                 <ListItemText
-                                    //onClick={() => router.navigate(`/profile/${user.username}`)}
+                                    onClick={() => router.navigate(`/exhibition/${exhibition.exhibitionId}`)}
                                     primary={exhibition.name}
                                     secondary={
                                         <>
                                             <CalendarMonthIcon fontSize="inherit" />
                                             {
-                                                formatDate(exhibition.startDate) === formatDate(exhibition.endDate)
-                                                    ? ` ${formatDate(exhibition.startDate)}`
-                                                    : ` ${formatDate(exhibition.startDate)} - ${formatDate(exhibition.endDate)}`
+                                                formatDate(exhibition.startDate.toString()) === formatDate(exhibition.endDate.toString())
+                                                    ? ` ${formatDate(exhibition.startDate.toString())}`
+                                                    : ` ${formatDate(exhibition.startDate.toString())} - ${formatDate(exhibition.endDate.toString())}`
                                             }
                                         </>
                                     }

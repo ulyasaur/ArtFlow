@@ -9,6 +9,8 @@ import ExhibitionList from "../../features/exhibitions/ExhibitionList";
 import RequireArtOwner from "./RequireArtOwner";
 import RequireDriver from "./RequireDriver";
 import RequireOrganiser from "./RequireOrganiser";
+import ExhibitionForm from "../../features/exhibitions/ExhibitionForm";
+import ExhibitionPage from "../../features/exhibitions/ExhibitionPage";
 
 export const routes: RouteObject[] = [
     {
@@ -20,6 +22,7 @@ export const routes: RouteObject[] = [
                     { path: "profile/:username", element: <ProfilePage /> },
                     { path: "home", element: <HomePage /> },
                     { path: "settings", element: <SettingsPage /> },
+                    { path: "exhibition/:exhibitionId", element: <ExhibitionPage /> },
                     {
                         element: <RequireArtOwner />, children: [
 
@@ -33,6 +36,8 @@ export const routes: RouteObject[] = [
                     {
                         element: <RequireOrganiser />, children: [
                             { path: "exhibitions", element: <ExhibitionList /> },
+                            { path: "exhibitions/add", element: <ExhibitionForm /> },
+                            { path: "exhibitions/update/:exhibitionId", element: <ExhibitionForm /> },
                         ]
                     }
                 ]

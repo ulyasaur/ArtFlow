@@ -86,7 +86,11 @@ const Profiles = {
 }
 
 const Exhibitions = {
-    getExhibitions: (userId: string) => requests.get<Exhibition[]>(`/exhibitions/organiser/${userId}`)
+    getExhibitions: (userId: string) => requests.get<Exhibition[]>(`/exhibitions/organiser/${userId}`),
+    getExhibition: (exhibitionId: string) => requests.get<Exhibition>(`/exhibitions/${exhibitionId}`),
+    addExhibition: (exhibition: Exhibition) => requests.post<Exhibition>(`/exhibitions`, exhibition),
+    updateExhibition: (exhibition: Exhibition) => requests.put<Exhibition>(`/exhibitions`, exhibition),
+    deleteExhibition: (exhibitionId: number) => requests.del(`/exhibitions/${exhibitionId}`)
 }
 
 
