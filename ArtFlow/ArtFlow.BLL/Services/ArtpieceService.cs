@@ -5,6 +5,7 @@ using ArtFlow.Core.Entities;
 using ArtFlow.Core.Enums;
 using ArtFlow.DAL.Abstractions;
 using ArtFlow.DAL.Photos.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
@@ -45,7 +46,7 @@ namespace ArtFlow.BLL.Services
             _keepRecommendationValidator = new KeepRecommendationValidator();
         }
 
-        public async Task AddArtpieceAsync(ArtpieceDto artpieceDto)
+        public async Task<Artpiece> AddArtpieceAsync(ArtpieceDto artpieceDto)
         {
             Artpiece artpiece = new Artpiece
             {
@@ -93,6 +94,16 @@ namespace ArtFlow.BLL.Services
 
                 this._artpieceRepository.Add(artpiece);
                 await this._artpieceRepository.SaveChangesAsync();
+
+                Artpiece added = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
+                    .Include(k => k.KeepRecommendation)
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(id));
+
+                return added;
             }
             catch (Exception ex)
             {
@@ -137,7 +148,7 @@ namespace ArtFlow.BLL.Services
                     .Include(o => o.Owner)
                         .ThenInclude(p =>  p.Photo)
                     .Include(k => k.KeepRecommendation)
-                    .FirstOrDefaultAsync(a => a.ArtpieceId == artpieceId);
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceId));
 
                 return artpiece;
             }
@@ -165,7 +176,7 @@ namespace ArtFlow.BLL.Services
                     .Include(o => o.Owner)
                         .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
-                    .Where(a => a.OwnerId == ownerId)
+                    .Where(a => a.OwnerId.Equals(ownerId))
                     .ToListAsync();
 
                 return artpieces;
@@ -263,7 +274,7 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task UpdateArtpieceAsync(ArtpieceDto artpieceDto)
+        public async Task<Artpiece> UpdateArtpieceAsync(ArtpieceDto artpieceDto)
         {
             if (string.IsNullOrEmpty(artpieceDto.ArtpieceId))
             {
@@ -313,7 +324,7 @@ namespace ArtFlow.BLL.Services
                     .Include(o => o.Owner)
                         .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
-                    .FirstOrDefaultAsync(a => a.ArtpieceId == artpieceDto.ArtpieceId);
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceDto.ArtpieceId));
 
                 existingArtpiece.Name = artpiece.Name;
                 existingArtpiece.Description = artpiece.Description;
@@ -327,11 +338,56 @@ namespace ArtFlow.BLL.Services
 
                 this._artpieceRepository.Update(existingArtpiece);
                 await this._artpieceRepository.SaveChangesAsync();
+
+                Artpiece updated = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
+                    .Include(k => k.KeepRecommendation)
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceDto.ArtpieceId));
+
+                return updated;
             }
             catch (Exception ex)
             {
                 this._logger.LogError(ex.Message);
                 throw;
+            }
+        }
+
+        public async Task<Photo> UpdateArtpiecePictureAsync(string artpieceId, IFormFile file)
+        {
+            if (string.IsNullOrEmpty(artpieceId))
+            {
+                throw new ArgumentNullException("Artpiece id must not be null");
+            }
+
+            try
+            {
+                Artpiece artpiece = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceId));
+
+                Photo photo = await this._photoAccessor.AddPhoto(file);
+
+                if (artpiece.Photo is not null)
+                {
+                    await this._photoAccessor.DeletePhoto(artpiece.Photo.PhotoId);
+                }
+
+                artpiece.Photo = photo;
+
+                this._artpieceRepository.Update(artpiece);
+                await this._artpieceRepository.SaveChangesAsync();
+
+                return photo;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
             }
         }
 

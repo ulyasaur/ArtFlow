@@ -111,28 +111,45 @@ function NavBar() {
             {isLoggedIn &&
               <>
                 {currentUser?.role === "Organiser" &&
-                  <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-                    <Link
-                      component={RouterLink}
-                      to={`/exhibitions`}
-                      sx={{
-                        color: "black", textDecoration: "none"
-                      }}
-                    >
-                      <Button
-                        sx={{ my: 2, color: 'white', display: 'block' }}
+                  <>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                      <Link
+                        component={RouterLink}
+                        to={`/exhibitions`}
+                        sx={{
+                          color: "black", textDecoration: "none"
+                        }}
                       >
-                        {t("navbar.exhibitions")}
-                      </Button>
-                    </Link>
-                  </Box>
+                        <Button
+                          sx={{ my: 2, color: 'white', display: 'block' }}
+                        >
+                          {t("navbar.exhibitions")}
+                        </Button>
+                      </Link>
+                    </Box>
+                    <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+                      <Link
+                        component={RouterLink}
+                        to={`/artpieces/available`}
+                        sx={{
+                          color: "black", textDecoration: "none"
+                        }}
+                      >
+                        <Button
+                          sx={{ my: 2, color: 'white', display: 'block' }}
+                        >
+                          {t("navbar.artpieces")}
+                        </Button>
+                      </Link>
+                    </Box>
+                  </>
                 }
 
                 {currentUser?.role === "ArtOwner" &&
                   <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                     <Link
                       component={RouterLink}
-                      to={`/feed`}
+                      to={`/artpieces`}
                       sx={{
                         color: "black", textDecoration: "none"
                       }}
@@ -144,6 +161,7 @@ function NavBar() {
                       </Button>
                     </Link>
                   </Box>
+
                 }
 
                 {currentUser?.role === "Driver" &&

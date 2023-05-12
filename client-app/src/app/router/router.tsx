@@ -11,6 +11,11 @@ import RequireDriver from "./RequireDriver";
 import RequireOrganiser from "./RequireOrganiser";
 import ExhibitionForm from "../../features/exhibitions/ExhibitionForm";
 import ExhibitionPage from "../../features/exhibitions/ExhibitionPage";
+import ArtpiecesList from "../../features/artpieces/ArtpiecesList";
+import ArtpiecePage from "../../features/artpieces/ArtpiecePage";
+import ArtpieceAddForm from "../../features/artpieces/ArtpieceAddForm";
+import ArtpieceUpdateForm from "../../features/artpieces/ArtpieceUpdateForm";
+import AvailableArtpieces from "../../features/artpieces/AvailableArtpieces";
 
 export const routes: RouteObject[] = [
     {
@@ -23,9 +28,12 @@ export const routes: RouteObject[] = [
                     { path: "home", element: <HomePage /> },
                     { path: "settings", element: <SettingsPage /> },
                     { path: "exhibition/:exhibitionId", element: <ExhibitionPage /> },
+                    { path: "artpiece/:artpieceId", element: <ArtpiecePage /> },
                     {
                         element: <RequireArtOwner />, children: [
-
+                            { path: "artpieces", element: <ArtpiecesList /> },
+                            { path: "artpieces/add", element: <ArtpieceAddForm /> },
+                            { path: "artpieces/update/:artpieceId", element: <ArtpieceUpdateForm /> },
                         ]
                     },
                     {
@@ -38,6 +46,7 @@ export const routes: RouteObject[] = [
                             { path: "exhibitions", element: <ExhibitionList /> },
                             { path: "exhibitions/add", element: <ExhibitionForm /> },
                             { path: "exhibitions/update/:exhibitionId", element: <ExhibitionForm /> },
+                            { path: "artpieces/available", element: <AvailableArtpieces /> },
                         ]
                     }
                 ]

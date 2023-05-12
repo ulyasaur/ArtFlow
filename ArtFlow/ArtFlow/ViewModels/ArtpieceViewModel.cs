@@ -16,6 +16,8 @@ namespace ArtFlow.ViewModels
 
         public string AuthorName { get; set; }
 
+        public string OwnerId { get; set; }
+
         public UserViewModel Owner { get; set; }
 
         public KeepRecommendationViewModel KeepRecommendation { get; set; }

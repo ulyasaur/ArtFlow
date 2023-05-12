@@ -4,12 +4,13 @@ import { useField } from "formik";
 interface Props {
     placeholder: string;
     name: string;
-    defaultValue?: string;
+    defaultValue?: string | number;
     label?: string;
     type?: string;
     required?: boolean;
     multiline?: boolean;
     minRows?: number;
+    InputProps?: any;
 }
 
 export default function FormTextField(props: Props) {

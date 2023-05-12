@@ -1,24 +1,21 @@
 import { observer } from "mobx-react-lite";
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
-import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useStore } from "../../app/stores/store";
+import { useEffect, useState } from "react";
+import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useTranslation } from "react-i18next";
-import ExhibitionHeader from "./ExhibitionHeader";
-import { Card, CardHeader, IconButton, Menu, MenuItem, ThemeProvider } from "@mui/material";
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import { router } from "../../app/router/router";
 import { theme } from "../../app/themes/theme";
+import { Card, CardHeader, IconButton, Menu, MenuItem, ThemeProvider } from "@mui/material";
+import { useParams } from "react-router-dom";
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import ArtpieceHeader from "./ArtpieceHeader";
+import { router } from "../../app/router/router";
 
-export default observer(function ExhibitionPage() {
+export default observer(function ArtpiecePage() {
     const { t } = useTranslation();
-    
-    const { exhibitionId } = useParams<string>();
-    const { exhibitionStore, userStore } = useStore();
-    const { loadExhibition, exhibition, loading, deleteExhibition } = exhibitionStore;
-    const {currentUser} = userStore;
-
-    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { artpieceId } = useParams<string>();
+    const { artpieceStore, userStore } = useStore();
+    const { artpiece, loadArtpiece, loading, deleteArtpiece } = artpieceStore;
+    const { currentUser } = userStore; const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
     const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -29,16 +26,16 @@ export default observer(function ExhibitionPage() {
     };
 
     useEffect(() => {
-        loadExhibition(exhibitionId!); 
-    }, [exhibitionId, loadExhibition]);
-    
-    if (loading || !exhibition) {
-        return <LoadingComponent content={t("loading.exhibition").toString()} />
+        loadArtpiece(artpieceId!);
+    }, [artpieceId, loadArtpiece]);
+
+    if (loading || !artpiece) {
+        return <LoadingComponent content={t("loading.artpiece").toString()} />
     }
 
     return (
         <ThemeProvider theme={theme}>
-                <Card
+            <Card
                 sx={{
                     margin: "auto",
                     width: "75vw",
@@ -51,14 +48,14 @@ export default observer(function ExhibitionPage() {
                         backgroundColor: "hotpink",
                         color: "white"
                     }}
-                    title={t("exhibition.exhibition")}
+                    title={t("artpiece.artpiece")}
                     titleTypographyProps={{
                         display: "inline-block",
                         fontSize: "13pt",
                         fontWeight: "bold"
                     }}
                     action={
-                        (currentUser?.id === exhibition.organiserId)
+                        (currentUser?.id === artpiece.ownerId)
                             ? <>
                                 <IconButton
                                     onClick={handleOpen}>
@@ -71,18 +68,18 @@ export default observer(function ExhibitionPage() {
                                 >
                                     <MenuItem onClick={() => {
                                         handleClose();
-                                        router.navigate(`/exhibitions/update/${exhibition.exhibitionId}`)
-                                        }}>{t("actions.edit")}</MenuItem>
+                                        router.navigate(`/artpieces/update/${artpiece.artpieceId}`)
+                                    }}>{t("actions.edit")}</MenuItem>
                                     <MenuItem onClick={() => {
                                         handleClose();
-                                        deleteExhibition(exhibition.exhibitionId)
-                                        }}>{t("actions.delete")}</MenuItem>
+                                        deleteArtpiece(artpiece.artpieceId)
+                                    }}>{t("actions.delete")}</MenuItem>
                                 </Menu>
                             </>
                             : <></>
                     }
                 />
-                    <ExhibitionHeader exhibition={exhibition} />
+                <ArtpieceHeader artpiece={artpiece} />
             </Card>
         </ThemeProvider>
     );

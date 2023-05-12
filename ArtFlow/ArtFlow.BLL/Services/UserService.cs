@@ -153,7 +153,6 @@ namespace ArtFlow.BLL.Services
             {
                 User user = await _userRepository
                     .GetAll()
-                    .AsNoTracking()
                     .Include(p => p.Photo)
                     .FirstOrDefaultAsync(u => u.Id.Equals(userId));
 
@@ -166,7 +165,8 @@ namespace ArtFlow.BLL.Services
 
                 user.Photo = photo;
 
-                this._userRepository.Update(user);
+                this._userRepository.Update(user); 
+                await this._userRepository.SaveChangesAsync();
 
                 return photo;
             }

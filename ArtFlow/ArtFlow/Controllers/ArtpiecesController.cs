@@ -145,9 +145,12 @@ namespace ArtFlow.Controllers
                 this._mapper.Map(artpieceAddViewModel, artpieceDto);
                 artpieceDto.OwnerId = this._userAccessor.GetUserId();
 
-                await this._artpieceService.AddArtpieceAsync(artpieceDto);
+                Artpiece artpiece = await this._artpieceService.AddArtpieceAsync(artpieceDto);
 
-                return Ok();
+                ArtpieceViewModel artpieceViewModel = new ArtpieceViewModel();
+                this._mapper.Map(artpiece, artpieceViewModel);
+
+                return Ok(artpieceViewModel);
             }
             catch (Exception ex)
             {
@@ -167,13 +170,37 @@ namespace ArtFlow.Controllers
                 this._mapper.Map(artpieceUpdateViewModel, artpieceDto);
                 artpieceDto.OwnerId = this._userAccessor.GetUserId();
 
-                await this._artpieceService.UpdateArtpieceAsync(artpieceDto);
+                Artpiece artpiece = await this._artpieceService.UpdateArtpieceAsync(artpieceDto);
 
-                return Ok();
+                ArtpieceViewModel artpieceViewModel = new ArtpieceViewModel();
+                this._mapper.Map(artpiece, artpieceViewModel);
+
+                return Ok(artpieceViewModel);
             }
             catch (Exception ex)
             {
                 this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "ArtOwner")]
+        [HttpPost("{artpieceId}/picture")]
+        public async Task<IActionResult> UpdateArtpiecePicture(string artpieceId, IFormFile file)
+        {
+            try
+            {
+                Photo photo = await this._artpieceService.UpdateArtpiecePictureAsync(artpieceId, file);
+
+                PhotoViewModel photoViewModel = new PhotoViewModel();
+                this._mapper.Map(photo, photoViewModel);
+
+                return Ok(photoViewModel);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
 
                 return BadRequest(ex.Message);
             }

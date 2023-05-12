@@ -9,20 +9,26 @@ import { useTranslation } from "react-i18next";
 
 interface Props {
     loading: boolean;
-    uploadPhoto: (file: Blob) => void;
+    uploadPhoto?: (file: Blob) => void;
+    uploadPhotoWithId?: (file: Blob, id: any) => void;
+    id?: any;
     open: boolean;
     handleClose: (open: boolean) => void;
     cropperProps: {}
 }
 
-export default observer(function PhotoUploadWidget({ loading, uploadPhoto, open, handleClose, cropperProps }: Props) {    
-    const { t} = useTranslation();
+export default observer(function PhotoUploadWidget({ loading, uploadPhoto, uploadPhotoWithId, id, open, handleClose, cropperProps }: Props) {
+    const { t } = useTranslation();
     const [files, setFiles] = useState<any>([]);
     const [cropper, setCropper] = useState<Cropper>();
 
     function onCrop() {
         if (cropper) {
-            cropper.getCroppedCanvas().toBlob(blob => uploadPhoto(blob!));
+            cropper.getCroppedCanvas().toBlob(blob => {
+                id
+                    ? uploadPhotoWithId!(blob!, id)
+                    : uploadPhoto!(blob!)
+            });
             setFiles([]);
             handleClose(false);
         }

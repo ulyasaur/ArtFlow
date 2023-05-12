@@ -7,6 +7,7 @@ import { router } from "../router/router";
 import { store } from "../stores/store";
 import { Photo } from "../models/photo";
 import { Exhibition } from "../models/exhibition";
+import { Artpiece, ArtpieceFormValues } from "../models/artpiece";
 
 axios.defaults.baseURL = "http://localhost:5244/api";
 
@@ -93,11 +94,45 @@ const Exhibitions = {
     deleteExhibition: (exhibitionId: number) => requests.del(`/exhibitions/${exhibitionId}`)
 }
 
+const Artpieces = {
+    getAvailable: () => requests.get<Artpiece[]>(`/artpieces/available`),
+    getOwnerArtpieces: (userId: string) => requests.get<Artpiece[]>(`/artpieces/owner/${userId}`),
+    getExhibitionArtpieces: (exhibitionId: number) => requests.get<Artpiece[]>(`/artpieces/exhibition/${exhibitionId}`),
+    getRoomArtpieces: (roomId: number) => requests.get<Artpiece[]>(`/artpieces/room/${roomId}`),
+    getArtpiece: (artpieceId: string) => requests.get<Artpiece>(`/artpieces/${artpieceId}`),
+    addArtpiece: (artpiece: ArtpieceFormValues) => {
+        let formData = new FormData();
+        formData.append("Photo", artpiece.photo!);
+        formData.append("Name", artpiece.name!);
+        formData.append("Description", artpiece.description!);
+        formData.append("AuthorName", artpiece.authorName!);
+        formData.append("MinTemperature", artpiece.minTemperature.toString());
+        formData.append("MaxTemperature", artpiece.maxTemperature.toString());
+        formData.append("MinHumidity", artpiece.minHumidity.toString());
+        formData.append("MaxHumidity", artpiece.maxHumidity.toString());
+        formData.append("MinLight", artpiece.minLight.toString());
+        formData.append("MaxLight", artpiece.maxLight.toString());
+        return axios.post<Artpiece>("/artpieces", formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+    },
+    updateArtpiece: (artpiece: ArtpieceFormValues) => requests.put<Artpiece>(`/artpieces`, artpiece),
+    uploadArtpiecePicture: (artpieceId: string, file: Blob) => {
+        let formData = new FormData();
+        formData.append("File", file);
+        return axios.post<Photo>(`/artpieces/${artpieceId}/picture`, formData, {
+            headers: { "Content-Type": "multipart/form-data" }
+        });
+    },
+    deleteArtpiece: (artpieceId: string) => requests.del(`/artpieces/${artpieceId}`)
+}
+
 
 const agent = {
     Account,
     Profiles,
-    Exhibitions
+    Exhibitions,
+    Artpieces
 };
 
 export default agent;
