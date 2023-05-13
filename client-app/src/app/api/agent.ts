@@ -8,6 +8,7 @@ import { store } from "../stores/store";
 import { Photo } from "../models/photo";
 import { Exhibition } from "../models/exhibition";
 import { Artpiece, ArtpieceFormValues } from "../models/artpiece";
+import { Order, OrderFormValues } from "../models/order";
 
 axios.defaults.baseURL = "http://localhost:5244/api";
 
@@ -127,12 +128,23 @@ const Artpieces = {
     deleteArtpiece: (artpieceId: string) => requests.del(`/artpieces/${artpieceId}`)
 }
 
+const Orders = {
+    getExhibitionOrders: (exhibitionId: number) => requests.get<Order[]>(`/orders/exhibition/${exhibitionId}`),
+    getOrganiserOrders: (organiserId: string) => requests.get<Order[]>(`/orders/organiser/${organiserId}`),
+    getOwnerOrders: (ownerId: string) => requests.get<Order[]>(`/orders/owner/${ownerId}`),
+    getDriverOrders: (driverId: string) => requests.get<Order[]>(`/orders/driver/${driverId}`),
+    getAvailableOrders: () => requests.get<Order[]>(`/orders/driver`),
+    getOrder: (orderId: number) => requests.get<Order>(`/orders/${orderId}`),
+    addOrder: (order: OrderFormValues) => requests.post<Order>(`/orders`, order)
+}
+
 
 const agent = {
     Account,
     Profiles,
     Exhibitions,
-    Artpieces
+    Artpieces, 
+    Orders
 };
 
 export default agent;

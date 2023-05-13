@@ -29,7 +29,7 @@ export default observer(function ProfileHeader({ profile }: Props) {
             >
                 <Avatar
                     alt="display name"
-                    src={profile.image ? profile.image?.url : userPlaceHolder}
+                    src={profile.photo ? profile.photo?.url : userPlaceHolder}
                     variant="rounded"
                     sx={{
                         display: "block",

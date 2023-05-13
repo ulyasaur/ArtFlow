@@ -20,7 +20,7 @@ export default observer(function UserCard({ user, description }: Props) {
                 <ListItemAvatar
                     onClick={() => router.navigate(`/profile/${user.username}`)}
                 >
-                    <Avatar src={user.image ? user.image?.url : userPlaceHolder} />
+                    <Avatar src={user.photo ? user.photo?.url : userPlaceHolder} />
                 </ListItemAvatar>
                 <ListItemText
                     onClick={() => router.navigate(`/profile/${user.username}`)}

@@ -168,7 +168,7 @@ function NavBar() {
                   <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
                     <Link
                       component={RouterLink}
-                      to={`/feed`}
+                      to={`/orders/available`}
                       sx={{
                         color: "black", textDecoration: "none"
                       }}
@@ -185,7 +185,7 @@ function NavBar() {
                 <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
                   <Link
                     component={RouterLink}
-                    to={`/feed`}
+                    to={`/orders`}
                     sx={{
                       color: "black", textDecoration: "none"
                     }}
@@ -244,7 +244,7 @@ function NavBar() {
                 <Box sx={{ flexGrow: 0, padding: "2px" }}>
                   <Tooltip title={t("navbar.menu")}>
                     <IconButton onClick={handleOpenUserMenu}>
-                      <Avatar alt={currentUser?.firstName + " " + currentUser?.lastName} src={currentUser?.image ? currentUser?.image?.url : userPlaceholder} />
+                      <Avatar alt={currentUser?.firstName + " " + currentUser?.lastName} src={currentUser?.photo ? currentUser?.photo?.url : userPlaceholder} />
                     </IconButton>
                   </Tooltip>
                   <Menu

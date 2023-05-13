@@ -92,7 +92,7 @@ export default class UserStore {
 
     setImage = (photo: Photo) => {
         if (this.currentUser) {
-            this.currentUser.image = photo;
+            this.currentUser.photo = photo;
         }
     }
 }

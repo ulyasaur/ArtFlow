@@ -71,7 +71,7 @@ export default observer(function SettingsPage() {
                     >
                         <Avatar
                             alt="display name"
-                            src={profile.image ? profile.image?.url : userPlaceHolder}
+                            src={profile.photo ? profile.photo?.url : userPlaceHolder}
                             variant="rounded"
                             sx={{
                                 width: 100,

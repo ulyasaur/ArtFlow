@@ -64,7 +64,7 @@ export default class ProfileStore {
             const photo = response.data;
             runInAction(() => {
                 if (this.profile) {
-                    this.profile.image = photo;
+                    this.profile.photo = photo;
                     store.userStore.setImage(photo);
                 }
                 this.uploading = false;

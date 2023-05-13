@@ -15,7 +15,9 @@
     "exhibitions": "Loading exhibitions...",
     "exhibition": "Loading exhibition...",
     "artpieces": "Loading artpieces...",
-    "artpiece": "Loading artpiece..."
+    "artpiece": "Loading artpiece...",
+    "orders": "Loading orders...",
+    "order": "Loading order..."
   },
   "months": {
     "January": "January",
@@ -110,5 +112,22 @@
     "maxHumidity": "Max. humidity",
     "minLight": "Min. light",
     "maxLight": "Max. light"
+  },
+  "order": {
+    "order": "Order",
+    "adress": "Adress",
+    "make": "Make an order"
+  },
+  "status": {
+    "status": "Status",
+    "Registered": "Registered",
+    "ApprovedByOwner": "Approved by owner",
+    "Paid": "Paid",
+    "ApprovedByDriver": "Approved by driver",
+    "InProgress": "In progress",
+    "Delivered": "Delivered",
+    "Declined": "Declined by owner",
+    "Canceled": "Canceled",
+    "Returned": "Returned"
   }
 }

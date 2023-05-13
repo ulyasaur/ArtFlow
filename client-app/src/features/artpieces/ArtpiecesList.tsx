@@ -17,7 +17,7 @@ export default observer(function ArtpiecesList() {
 
     useEffect(() => {
         loadOwnerArtpieces(currentUser!.id);
-    }, [currentUser!.id, loadOwnerArtpieces]);
+    }, [currentUser, loadOwnerArtpieces]);
 
     if (loading || !artpieces) {
         return <LoadingComponent content={t("loading.artpieces").toString()} />
@@ -58,6 +58,7 @@ export default observer(function ArtpiecesList() {
                         <> <ArtpieceCard
                             key={artpiece.artpieceId}
                             artpiece={artpiece}
+                            actions={true}
                         />
                             <Divider variant="middle" />
                         </>

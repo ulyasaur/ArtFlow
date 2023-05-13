@@ -16,6 +16,10 @@ import ArtpiecePage from "../../features/artpieces/ArtpiecePage";
 import ArtpieceAddForm from "../../features/artpieces/ArtpieceAddForm";
 import ArtpieceUpdateForm from "../../features/artpieces/ArtpieceUpdateForm";
 import AvailableArtpieces from "../../features/artpieces/AvailableArtpieces";
+import UserOrdersList from "../../features/orders/UserOrdersList";
+import OrderPage from "../../features/orders/OrderPage";
+import OrderForm from "../../features/orders/OrderForm";
+import AvailableOrdersList from "../../features/orders/AvailableOrdersList";
 
 export const routes: RouteObject[] = [
     {
@@ -27,8 +31,10 @@ export const routes: RouteObject[] = [
                     { path: "profile/:username", element: <ProfilePage /> },
                     { path: "home", element: <HomePage /> },
                     { path: "settings", element: <SettingsPage /> },
-                    { path: "exhibition/:exhibitionId", element: <ExhibitionPage /> },
-                    { path: "artpiece/:artpieceId", element: <ArtpiecePage /> },
+                    { path: "exhibitions/:exhibitionId", element: <ExhibitionPage /> },
+                    { path: "artpieces/:artpieceId", element: <ArtpiecePage /> },
+                    { path: "orders", element: <UserOrdersList /> },
+                    { path: "orders/:orderId", element: <OrderPage /> },
                     {
                         element: <RequireArtOwner />, children: [
                             { path: "artpieces", element: <ArtpiecesList /> },
@@ -38,7 +44,7 @@ export const routes: RouteObject[] = [
                     },
                     {
                         element: <RequireDriver />, children: [
-
+                            { path: "orders/available", element: <AvailableOrdersList /> },
                         ]
                     },
                     {
@@ -47,6 +53,7 @@ export const routes: RouteObject[] = [
                             { path: "exhibitions/add", element: <ExhibitionForm /> },
                             { path: "exhibitions/update/:exhibitionId", element: <ExhibitionForm /> },
                             { path: "artpieces/available", element: <AvailableArtpieces /> },
+                            { path: ":artpieceId/order", element: <OrderForm /> },
                         ]
                     }
                 ]

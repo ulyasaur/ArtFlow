@@ -12,11 +12,11 @@ import { theme } from "../../app/themes/theme";
 
 export default observer(function ExhibitionPage() {
     const { t } = useTranslation();
-    
+
     const { exhibitionId } = useParams<string>();
     const { exhibitionStore, userStore } = useStore();
     const { loadExhibition, exhibition, loading, deleteExhibition } = exhibitionStore;
-    const {currentUser} = userStore;
+    const { currentUser } = userStore;
 
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
@@ -29,16 +29,16 @@ export default observer(function ExhibitionPage() {
     };
 
     useEffect(() => {
-        loadExhibition(exhibitionId!); 
+        loadExhibition(exhibitionId!);
     }, [exhibitionId, loadExhibition]);
-    
+
     if (loading || !exhibition) {
         return <LoadingComponent content={t("loading.exhibition").toString()} />
     }
 
     return (
         <ThemeProvider theme={theme}>
-                <Card
+            <Card
                 sx={{
                     margin: "auto",
                     width: "75vw",
@@ -72,17 +72,17 @@ export default observer(function ExhibitionPage() {
                                     <MenuItem onClick={() => {
                                         handleClose();
                                         router.navigate(`/exhibitions/update/${exhibition.exhibitionId}`)
-                                        }}>{t("actions.edit")}</MenuItem>
+                                    }}>{t("actions.edit")}</MenuItem>
                                     <MenuItem onClick={() => {
                                         handleClose();
                                         deleteExhibition(exhibition.exhibitionId)
-                                        }}>{t("actions.delete")}</MenuItem>
+                                    }}>{t("actions.delete")}</MenuItem>
                                 </Menu>
                             </>
                             : <></>
                     }
                 />
-                    <ExhibitionHeader exhibition={exhibition} />
+                <ExhibitionHeader exhibition={exhibition} />
             </Card>
         </ThemeProvider>
     );

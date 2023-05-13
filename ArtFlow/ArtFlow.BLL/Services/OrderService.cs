@@ -114,7 +114,7 @@ namespace ArtFlow.BLL.Services
                     .AsNoTracking()
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
-                order.Status = DeliveryStatus.ApprovedbyOwner;
+                order.Status = DeliveryStatus.ApprovedByOwner;
                 order.UpdatedOn = DateTimeOffset.UtcNow;
 
                 this._orderRepository.Update(order);
@@ -143,7 +143,7 @@ namespace ArtFlow.BLL.Services
                     .Include(a => a.Artpiece)
                         .ThenInclude(k => k.KeepRecommendation)
                     .Include(e => e.Exhibition)
-                    .Where(o => o.Status == DeliveryStatus.ApprovedbyOwner)
+                    .Where(o => o.Status == DeliveryStatus.ApprovedByOwner)
                     .ToListAsync();
                 return orders;
             }
@@ -380,7 +380,7 @@ namespace ArtFlow.BLL.Services
                     .AsNoTracking()
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
-                order.Status = DeliveryStatus.Cancel;
+                order.Status = DeliveryStatus.Canceled;
                 order.UpdatedOn = DateTimeOffset.UtcNow;
 
                 this._orderRepository.Update(order);
