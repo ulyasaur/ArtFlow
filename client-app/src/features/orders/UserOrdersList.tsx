@@ -2,11 +2,11 @@ import { ThemeProvider } from "@emotion/react";
 import { observer } from "mobx-react-lite";
 import { useTranslation } from "react-i18next";
 import { theme } from "../../app/themes/theme";
-import { Box, Card, CardContent, CardHeader, Divider } from "@mui/material";
+import { Card, CardContent, CardHeader } from "@mui/material";
 import { useStore } from "../../app/stores/store";
 import { useEffect } from "react";
-import OrderCard from "./OrderCard";
 import LoadingComponent from "../../app/layout/LoadingComponent";
+import GroupedOrders from "./GroupedOrders";
 
 export default observer(function UserOrdersList() {
     const { t } = useTranslation();
@@ -49,11 +49,7 @@ export default observer(function UserOrdersList() {
                     }}
                 />
                 <CardContent>
-                    {orders?.map(order =>
-                        <Box key={order.orderId}>
-                            <OrderCard order={order} />
-                            <Divider variant="middle" />
-                        </Box>)}
+                    <GroupedOrders />
                 </CardContent>
             </Card>
         </ThemeProvider>

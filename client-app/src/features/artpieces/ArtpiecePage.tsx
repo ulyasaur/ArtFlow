@@ -4,17 +4,18 @@ import { useEffect, useState } from "react";
 import LoadingComponent from "../../app/layout/LoadingComponent";
 import { useTranslation } from "react-i18next";
 import { theme } from "../../app/themes/theme";
-import { Card, CardHeader, IconButton, Menu, MenuItem, ThemeProvider } from "@mui/material";
+import { Card, CardContent, CardHeader, IconButton, Menu, MenuItem, ThemeProvider } from "@mui/material";
 import { useParams } from "react-router-dom";
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ArtpieceHeader from "./ArtpieceHeader";
 import { router } from "../../app/router/router";
+import OrderCard from "../orders/OrderCard";
 
 export default observer(function ArtpiecePage() {
     const { t } = useTranslation();
     const { artpieceId } = useParams<string>();
     const { artpieceStore, userStore } = useStore();
-    const { artpiece, loadArtpiece, loading, deleteArtpiece } = artpieceStore;
+    const { artpiece, order, loadArtpiece, loading, deleteArtpiece, loadLatestOrder } = artpieceStore;
     const { currentUser } = userStore; const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
@@ -27,7 +28,8 @@ export default observer(function ArtpiecePage() {
 
     useEffect(() => {
         loadArtpiece(artpieceId!);
-    }, [artpieceId, loadArtpiece]);
+        loadLatestOrder(artpieceId!);
+    }, [artpieceId, loadArtpiece, loadLatestOrder]);
 
     if (loading || !artpiece) {
         return <LoadingComponent content={t("loading.artpiece").toString()} />
@@ -80,6 +82,29 @@ export default observer(function ArtpiecePage() {
                     }
                 />
                 <ArtpieceHeader artpiece={artpiece} />
+                {
+                    order &&
+                    <CardContent>
+                        <Card sx={{minHeight: "28vh"}}>
+                            <CardHeader
+                                sx={{
+                                    textAlign: "center",
+                                    backgroundColor: "hotpink",
+                                    color: "white"
+                                }}
+                                title={t("artpiece.active")}
+                                titleTypographyProps={{
+                                    display: "inline-block",
+                                    fontSize: "13pt",
+                                    fontWeight: "bold"
+                                }}
+                            />
+                            <CardContent>
+                                <OrderCard order={order} />
+                            </CardContent>
+                        </Card>
+                    </CardContent>
+                }
             </Card>
         </ThemeProvider>
     );

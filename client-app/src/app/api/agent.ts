@@ -134,6 +134,7 @@ const Orders = {
     getOwnerOrders: (ownerId: string) => requests.get<Order[]>(`/orders/owner/${ownerId}`),
     getDriverOrders: (driverId: string) => requests.get<Order[]>(`/orders/driver/${driverId}`),
     getAvailableOrders: () => requests.get<Order[]>(`/orders/driver`),
+    getOrderByArtpiece: (artpieceId: string) => requests.get<Order>(`/orders/artpiece/${artpieceId}/order`),
     getOrder: (orderId: number) => requests.get<Order>(`/orders/${orderId}`),
     addOrder: (order: OrderFormValues) => requests.post<Order>(`/orders`, order)
 }

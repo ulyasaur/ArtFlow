@@ -11,6 +11,16 @@ export default class OrderStore {
         makeAutoObservable(this);
     }
 
+    get groupedOrders() {
+        return Object.entries(
+            this.orders!.reduce((orders, order) => {
+                const status = order.status;
+                orders[status] = orders[status] ? [...orders[status], order] : [order];
+                return orders;
+            }, {} as { [key: string]: Order[] })
+        );
+    }
+
     loadExhibitionOrders = async (exhibitionId: number) => {
         this.loading = true;
         try {

@@ -2,10 +2,12 @@ import { makeAutoObservable, runInAction } from "mobx";
 import { Artpiece, ArtpieceFormValues } from "../models/artpiece";
 import agent from "../api/agent";
 import { router } from "../router/router";
+import { Order } from "../models/order";
 
 export default class ArtpieceStore {
     artpieces: Artpiece[] | null = null;
     artpiece: Artpiece | null = null;
+    order: Order | null = null;
     loading = false;
 
     constructor() {
@@ -16,6 +18,20 @@ export default class ArtpieceStore {
         this.loading = true;
         try {
             const artpieces = await agent.Artpieces.getOwnerArtpieces(userId);
+            runInAction(() => {
+                this.artpieces = artpieces;
+                this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
+        }
+    }
+
+    loadExhibitionArtpieces = async (exhibitionId: number) => {
+        this.loading = true;
+        try {
+            const artpieces = await agent.Artpieces.getExhibitionArtpieces(exhibitionId);
             runInAction(() => {
                 this.artpieces = artpieces;
                 this.loading = false;
@@ -54,6 +70,20 @@ export default class ArtpieceStore {
         }
     }
 
+    loadLatestOrder = async (artpieceId: string) => {
+        this.loading = true;
+        try {
+            const order = await agent.Orders.getOrderByArtpiece(artpieceId);
+            runInAction(() => {
+                this.order = order;
+                this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
+        }
+    }
+
     addArtpiece = async (artpiece: ArtpieceFormValues) => {
         this.loading = true;
         try {
@@ -73,6 +103,8 @@ export default class ArtpieceStore {
         try {
             const updated = await agent.Artpieces.updateArtpiece(artpiece);
             runInAction(() => {
+                this.artpieces = this.artpieces!.filter(e => e.artpieceId !== artpiece.artpieceId);
+                this.artpieces.push(updated);
                 this.loading = false;
             });
         } catch (error) {

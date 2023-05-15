@@ -378,16 +378,38 @@ namespace ArtFlow.Controllers
 
         [AllowAnonymous]
         [HttpGet("artpiece/{artpieceId}")]
+        public async Task<IActionResult> GetOrderIdByArtpieceAsync(string artpieceId)
+        {
+            try
+            {
+                Order order = await this._orderService.GetOrderByArtpieceAsync(artpieceId);
+
+                return Ok(order.OrderId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpGet("artpiece/{artpieceId}/order")]
         public async Task<IActionResult> GetOrderByArtpieceAsync(string artpieceId)
         {
             try
             {
                 Order order = await this._orderService.GetOrderByArtpieceAsync(artpieceId);
 
-                /*OrderViewModel orderViewModel = new OrderViewModel();
-                this._mapper.Map(order, orderViewModel);*/
+                if(order == null)
+                {
+                    return Ok(null);
+                }
 
-                return Ok(order.OrderId);
+                OrderViewModel orderViewModel = new OrderViewModel();
+                this._mapper.Map(order, orderViewModel);
+
+                return Ok(orderViewModel);
             }
             catch (Exception ex)
             {
