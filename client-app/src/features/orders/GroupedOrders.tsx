@@ -26,7 +26,7 @@ export default observer(function GroupedOrders() {
                         {
                             orders.map(order =>
                                 <Box key={order.orderId}>
-                                    <OrderCard order={order} />
+                                    <OrderCard order={order} action={true}/>
                                     <Divider variant="middle" />
                                 </Box>)
                         }

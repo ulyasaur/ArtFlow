@@ -20,7 +20,6 @@ namespace ArtFlow.Mapping
             CreateMap<StateViewModel, State>();
 
             CreateMap<Room, RoomViewModel>()
-                .ForMember(d => d.ExhibitionName, o => o.MapFrom(s => s.Exhibition.Name))
                 .ForMember(d => d.NumberOfPieces, o => o.MapFrom(s => s.RoomArtpieces.Count));
 
             CreateMap<RoomViewModel, Room>();

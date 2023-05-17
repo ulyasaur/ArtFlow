@@ -9,6 +9,7 @@ import ArtpieceCard from "../artpieces/ArtpieceCard";
 import ExhibitionCard from "../exhibitions/ExhibitionCard";
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import { DeliveryStatus } from "../../app/models/status";
+import OrderActionButton from "./OrderActionButton";
 
 interface Props {
     order: Order;
@@ -76,6 +77,9 @@ export default observer(function OrderHeader({ order }: Props) {
                             {t("exhibition.exhibition")}
                         </Typography>
                         <ExhibitionCard exhibition={order.exhibition} />
+                        <Box sx={{ paddingLeft: "20px" }}>
+                            <OrderActionButton order={order} />
+                        </Box>                        
                     </Grid>
                 </Grid>
             </CardContent>

@@ -1,11 +1,15 @@
 import { makeAutoObservable, runInAction } from "mobx";
 import agent from "../api/agent";
 import { Order, OrderFormValues } from "../models/order";
+import { DeliveryStatus } from "../models/status";
+import { State } from "../models/state";
 
 export default class OrderStore {
     orders: Order[] | null = null;
     order: Order | null = null;
+    states: State[] | null = null;
     loading = false;
+    loadingStatus = false;
 
     constructor() {
         makeAutoObservable(this);
@@ -113,6 +117,123 @@ export default class OrderStore {
                 this.order = added;
                 this.orders?.push(added);
                 this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
+        }
+    }
+
+    setApprovedByOwner = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            await agent.Orders.setApprovedByOwner(orderId);
+            this.setStatus(orderId, DeliveryStatus.ApprovedByOwner);
+            runInAction(() => {
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
+    setAcceptedByDriver = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            await agent.Orders.setAcceptedByDriver(orderId);
+            this.setStatus(orderId, DeliveryStatus.ApprovedByDriver);
+            runInAction(() => {
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
+    setInProgress = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            await agent.Orders.setInProgress(orderId);
+            this.setStatus(orderId, DeliveryStatus.InProgress);
+            runInAction(() => {
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
+    setDelivered = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            await agent.Orders.setDelivered(orderId);
+            this.setStatus(orderId, DeliveryStatus.Delivered);
+            runInAction(() => {
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
+    setDeclined = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            await agent.Orders.setDeclined(orderId);
+            this.setStatus(orderId, DeliveryStatus.Declined);
+            runInAction(() => {
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
+    setCanceled = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            await agent.Orders.setCanceled(orderId);
+            this.setStatus(orderId, DeliveryStatus.Canceled);
+            runInAction(() => {
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
+    setReturned = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            await agent.Orders.setReturned(orderId);
+            this.setStatus(orderId, DeliveryStatus.Returned);
+            runInAction(() => {
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
+    setStatus = (orderId: number, status: number) => {
+        try {
+            runInAction(() => {
+                if (this.order?.orderId === orderId) {
+                    this.order.status = status
+                }
+
+                this.orders?.forEach(order => {
+                    if (order.orderId === orderId) {
+                        order.status = status
+                    }
+                });
             });
         } catch (error) {
             console.log(error);

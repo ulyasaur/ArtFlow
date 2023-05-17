@@ -16,7 +16,8 @@ export default observer(function ArtpiecePage() {
     const { artpieceId } = useParams<string>();
     const { artpieceStore, userStore } = useStore();
     const { artpiece, order, loadArtpiece, loading, deleteArtpiece, loadLatestOrder } = artpieceStore;
-    const { currentUser } = userStore; const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const { currentUser } = userStore; 
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const open = Boolean(anchorEl);
 
     const handleOpen = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -85,7 +86,7 @@ export default observer(function ArtpiecePage() {
                 {
                     order &&
                     <CardContent>
-                        <Card sx={{minHeight: "28vh"}}>
+                        <Card sx={{minHeight: "25vh"}}>
                             <CardHeader
                                 sx={{
                                     textAlign: "center",

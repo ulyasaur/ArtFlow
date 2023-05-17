@@ -45,7 +45,7 @@ export default observer(function AvailableOrdersList() {
                 <CardContent>
                     {orders?.map(order =>
                         <Box key={order.orderId}>
-                            <OrderCard order={order} />
+                            <OrderCard order={order} action={true}/>
                             <Divider variant="middle" />
                         </Box>)}
                 </CardContent>

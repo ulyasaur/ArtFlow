@@ -89,7 +89,7 @@ namespace ArtFlow.BLL.Services
                     .Include(k => k.KeepRecommendation)
                     .FirstOrDefaultAsync(a => a.ArtpieceId == order.ArtpieceId);
 
-                if (artpiece.KeepRecommendation.MinTemperature < state.Temperature
+                if (state is not null && artpiece.KeepRecommendation.MinTemperature < state.Temperature
                     && artpiece.KeepRecommendation.MaxTemperature > state.Temperature
                     && artpiece.KeepRecommendation.MinHumidity < state.Humidity
                     && artpiece.KeepRecommendation.MaxHumidity > state.Humidity

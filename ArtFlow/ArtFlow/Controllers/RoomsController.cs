@@ -77,9 +77,12 @@ namespace ArtFlow.Controllers
                 Room room = new Room();
                 this._mapper.Map(roomAddViewModel, room);
 
-                await this._roomService.AddRoomAsync(room);
+                Room added = await this._roomService.AddRoomAsync(room);
 
-                return Ok();
+                RoomViewModel addedViewModel = new RoomViewModel();
+                this._mapper.Map(added, addedViewModel);
+
+                return Ok(addedViewModel);
             }
             catch (Exception ex)
             {

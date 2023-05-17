@@ -20,6 +20,8 @@ import UserOrdersList from "../../features/orders/UserOrdersList";
 import OrderPage from "../../features/orders/OrderPage";
 import OrderForm from "../../features/orders/OrderForm";
 import AvailableOrdersList from "../../features/orders/AvailableOrdersList";
+import RoomForm from "../../features/rooms/RoomForm";
+import RoomPage from "../../features/rooms/RoomPage";
 
 export const routes: RouteObject[] = [
     {
@@ -52,6 +54,8 @@ export const routes: RouteObject[] = [
                             { path: "exhibitions", element: <ExhibitionList /> },
                             { path: "exhibitions/add", element: <ExhibitionForm /> },
                             { path: "exhibitions/update/:exhibitionId", element: <ExhibitionForm /> },
+                            { path: "exhibitions/:exhibitionId/room/add", element: <RoomForm /> },
+                            { path: "exhibitions/:exhibitionId/room/:roomId", element: <RoomPage /> },
                             { path: "artpieces/available", element: <AvailableArtpieces /> },
                             { path: ":artpieceId/order", element: <OrderForm /> },
                         ]

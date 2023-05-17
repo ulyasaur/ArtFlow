@@ -77,7 +77,7 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task AddRoomAsync(Room room)
+        public async Task<Room> AddRoomAsync(Room room)
         {
             if(!this._roomValidator.Validate(room))
             {
@@ -90,6 +90,16 @@ namespace ArtFlow.BLL.Services
 
                 this._roomRepository.Add(room);
                 await this._roomRepository.SaveChangesAsync();
+
+                Room added = await this._roomRepository
+                    .GetAll()
+                    .Include(e => e.Exhibition)
+                    .Include(ra => ra.RoomArtpieces)
+                        .ThenInclude(a => a.Artpiece)
+                     .OrderByDescending(r => r.RoomId)
+                    .FirstOrDefaultAsync(r => r.ExhibitionId == room.ExhibitionId);
+
+                return added;
             }
             catch (Exception ex)
             {

@@ -54,6 +54,20 @@ export default class ArtpieceStore {
             console.log(error);
             runInAction(() => this.loading = false);
         }
+    }    
+
+    loadAvailableRoomArtpieces = async (exhibitionId: number) => {
+        this.loading = true;
+        try {
+            const artpieces = await agent.Artpieces.getRoomAvailableArtpieces(exhibitionId);
+            runInAction(() => {
+                this.artpieces = artpieces;
+                this.loading = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loading = false);
+        }
     }
 
     loadArtpiece = async (artpieceId: string) => {

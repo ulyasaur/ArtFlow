@@ -76,7 +76,7 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task AddOrderAsync(Order order)
+        public async Task<Order> AddOrderAsync(Order order)
         {
             if (!this._orderValidator.Validate(order))
             {
@@ -92,6 +92,25 @@ namespace ArtFlow.BLL.Services
 
                 this._orderRepository.Add(order);
                 await this._orderRepository.SaveChangesAsync();
+
+                Order added = await this._orderRepository
+                    .GetAll()
+                    .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
+                    .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
+                    .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
+                    .Include(e => e.Exhibition)
+                    .OrderByDescending(o => o.UpdatedOn)
+                    .FirstOrDefaultAsync(o =>
+                        o.ArtpieceId.Equals(order.ArtpieceId));
+
+                return added;
             }
             catch (Exception ex)
             {
@@ -488,7 +507,7 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task SetOrderPaidAsync(int orderId)
+        /*public async Task SetOrderPaidAsync(int orderId)
         {
             if (orderId <= 0)
             {
@@ -514,7 +533,7 @@ namespace ArtFlow.BLL.Services
                 this._logger.LogError(ex.Message);
                 throw;
             }
-        }
+        }*/
 
         public async Task SetOrderReturnedAsync(int orderId)
         {

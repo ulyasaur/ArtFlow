@@ -9,6 +9,7 @@ import { Photo } from "../models/photo";
 import { Exhibition } from "../models/exhibition";
 import { Artpiece, ArtpieceFormValues } from "../models/artpiece";
 import { Order, OrderFormValues } from "../models/order";
+import { Room } from "../models/room";
 
 axios.defaults.baseURL = "http://localhost:5244/api";
 
@@ -100,6 +101,7 @@ const Artpieces = {
     getOwnerArtpieces: (userId: string) => requests.get<Artpiece[]>(`/artpieces/owner/${userId}`),
     getExhibitionArtpieces: (exhibitionId: number) => requests.get<Artpiece[]>(`/artpieces/exhibition/${exhibitionId}`),
     getRoomArtpieces: (roomId: number) => requests.get<Artpiece[]>(`/artpieces/room/${roomId}`),
+    getRoomAvailableArtpieces: (exhibitionId: number) => requests.get<Artpiece[]>(`/artpieces/room/${exhibitionId}/available`),
     getArtpiece: (artpieceId: string) => requests.get<Artpiece>(`/artpieces/${artpieceId}`),
     addArtpiece: (artpiece: ArtpieceFormValues) => {
         let formData = new FormData();
@@ -136,16 +138,32 @@ const Orders = {
     getAvailableOrders: () => requests.get<Order[]>(`/orders/driver`),
     getOrderByArtpiece: (artpieceId: string) => requests.get<Order>(`/orders/artpiece/${artpieceId}/order`),
     getOrder: (orderId: number) => requests.get<Order>(`/orders/${orderId}`),
-    addOrder: (order: OrderFormValues) => requests.post<Order>(`/orders`, order)
+    addOrder: (order: OrderFormValues) => requests.post<Order>(`/orders`, order),
+    setApprovedByOwner: (orderId: number) => requests.put(`/orders/${orderId}/approve`, orderId),
+    setAcceptedByDriver: (orderId: number) => requests.put(`/orders/${orderId}/accept`, orderId),
+    setInProgress: (orderId: number) => requests.put(`/orders/${orderId}/progress`, orderId),
+    setDelivered: (orderId: number) => requests.put(`/orders/${orderId}/deliver`, orderId),
+    setDeclined: (orderId: number) => requests.put(`/orders/${orderId}/decline`, orderId),
+    setCanceled: (orderId: number) => requests.put(`/orders/${orderId}/cancel`, orderId),
+    setReturned: (orderId: number) => requests.put(`/orders/${orderId}/return`, orderId)
 }
 
+const Rooms = {
+    getExhibitionRooms: (exhibitionId: number) => requests.get<Room[]>(`/rooms/exhibition/${exhibitionId}`),
+    getRoom: (roomId: number) => requests.get<Room>(`/rooms/${roomId}`),
+    addRoom: (room: Partial<Room>) => requests.post<Room>(`/rooms`, room),
+    deleteRoom: (roomId: number) => requests.del(`/rooms/${roomId}`),
+    addArtpieceToRoom: (roomId: number, artpieceId: string) => requests.post(`/rooms/${roomId}/${artpieceId}`, roomId),
+    deleteArtpieceFromRoom: (roomId: number, artpieceId: string) => requests.del(`/rooms/${roomId}/${artpieceId}`)
+}
 
 const agent = {
     Account,
     Profiles,
     Exhibitions,
     Artpieces, 
-    Orders
+    Orders,
+    Rooms
 };
 
 export default agent;

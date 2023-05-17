@@ -220,9 +220,12 @@ namespace ArtFlow.Controllers
                 order.UpdatedOn = DateTimeOffset.UtcNow;
                 order.CustomerId = this._userAccessor.GetUserId();
 
-                await this._orderService.AddOrderAsync(order);
+                Order added = await this._orderService.AddOrderAsync(order);
 
-                return Ok();
+                OrderViewModel addedViewModel = new OrderViewModel();
+                this._mapper.Map(added, addedViewModel);
+
+                return Ok(addedViewModel);
             }
             catch (Exception ex)
             {
@@ -250,7 +253,7 @@ namespace ArtFlow.Controllers
             }
         }
 
-        [Authorize(Roles = "Organiser")]
+        /*[Authorize(Roles = "Organiser")]
         [HttpPut("{orderId}/pay")]
         public async Task<IActionResult> SetOrderPaidAsync(int orderId)
         {
@@ -266,14 +269,15 @@ namespace ArtFlow.Controllers
 
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
 
         [Authorize(Roles = "Driver")]
-        [HttpPut("{orderId}/{driverId}/accept")]
-        public async Task<IActionResult> AcceptOrderByDriverAsync(int orderId, string driverId)
+        [HttpPut("{orderId}/accept")]
+        public async Task<IActionResult> AcceptOrderByDriverAsync(int orderId)
         {
             try
             {
+                string driverId = this._userAccessor.GetUserId();
                 await this._orderService.AcceptOrderByDriverAsync(orderId, driverId);
 
                 return Ok();

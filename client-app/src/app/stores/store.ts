@@ -4,6 +4,7 @@ import ProfileStore from "./profileStore";
 import ExhibitionStore from "./exhibitionStore";
 import ArtpieceStore from "./artpieceStore";
 import OrderStore from "./orderStore";
+import RoomStore from "./roomStore";
 
 interface Store {
     userStore: UserStore;
@@ -11,6 +12,7 @@ interface Store {
     exhibitionStore: ExhibitionStore;
     artpieceStore: ArtpieceStore;
     orderStore: OrderStore;
+    roomStore: RoomStore;
 }
 
 export const store: Store = {
@@ -18,7 +20,8 @@ export const store: Store = {
     profileStore: new ProfileStore(),
     exhibitionStore: new ExhibitionStore(),
     artpieceStore: new ArtpieceStore(),
-    orderStore: new OrderStore()
+    orderStore: new OrderStore(),
+    roomStore: new RoomStore
 }
 
 export const StoreContext = createContext(store);

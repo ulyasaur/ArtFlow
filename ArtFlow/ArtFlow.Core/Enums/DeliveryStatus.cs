@@ -10,7 +10,7 @@ namespace ArtFlow.Core.Enums
     {
         Registered,
         ApprovedByOwner,
-        Paid,
+        //Paid,
         ApprovedByDriver,
         InProgress,
         Delivered,

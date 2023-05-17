@@ -13,7 +13,7 @@ namespace ArtFlow.BLL.Abstractions
 
         Task<Room> GetRoomAsync(int roomId);
 
-        Task AddRoomAsync(Room room);
+        Task<Room> AddRoomAsync(Room room);
 
         Task DeleteRoomAsync(int roomId);
 

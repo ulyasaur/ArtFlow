@@ -45,30 +45,6 @@ export default observer(function OrderPage() {
                         fontSize: "13pt",
                         fontWeight: "bold"
                     }}
-                    // action={
-                    //     (currentUser?.id === exhibition.organiserId)
-                    //         ? <>
-                    //             <IconButton
-                    //                 onClick={handleOpen}>
-                    //                 <MoreVertIcon />
-                    //             </IconButton>
-                    //             <Menu
-                    //                 anchorEl={anchorEl}
-                    //                 open={open}
-                    //                 onClose={handleClose}
-                    //             >
-                    //                 <MenuItem onClick={() => {
-                    //                     handleClose();
-                    //                     router.navigate(`/exhibitions/update/${exhibition.exhibitionId}`)
-                    //                 }}>{t("actions.edit")}</MenuItem>
-                    //                 <MenuItem onClick={() => {
-                    //                     handleClose();
-                    //                     deleteExhibition(exhibition.exhibitionId)
-                    //                 }}>{t("actions.delete")}</MenuItem>
-                    //             </Menu>
-                    //         </>
-                    //         : <></>
-                    // }
                 />
                 <OrderHeader order={order} />
             </Card>            

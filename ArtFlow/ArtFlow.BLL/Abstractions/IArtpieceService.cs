@@ -19,6 +19,8 @@ namespace ArtFlow.BLL.Abstractions
 
         Task<List<Artpiece>> GetRoomArtpiecesAsync(int roomId);
 
+        Task<List<Artpiece>> GetRoomAvailableArtpiecesAsync(int exhibitionId);
+
         Task<Artpiece> GetArtpieceAsync(string artpieceId);
 
         Task<Artpiece> AddArtpieceAsync(ArtpieceDto artpieceDto);

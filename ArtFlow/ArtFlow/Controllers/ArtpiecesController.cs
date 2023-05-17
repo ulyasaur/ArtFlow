@@ -114,6 +114,27 @@ namespace ArtFlow.Controllers
                 return BadRequest(ex.Message);
             }
         }
+        
+        [Authorize(Roles = "Organiser")]
+        [HttpGet("room/{exhibitionId}/available")]
+        public async Task<IActionResult> GetRoomAvailableArtpiecesAsync(int exhibitionId)
+        {
+            try
+            {
+                List<Artpiece> artpieces = await this._artpieceService.GetRoomAvailableArtpiecesAsync(exhibitionId);
+
+                List<ArtpieceViewModel> artpieceViewModels = new List<ArtpieceViewModel>();
+                this._mapper.Map(artpieces, artpieceViewModels);
+
+                return Ok(artpieceViewModels);
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
 
         [HttpGet("{artpieceId}")]
         public async Task<IActionResult> GetArtpieceAsync(string artpieceId)

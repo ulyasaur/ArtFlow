@@ -12,6 +12,7 @@ import { theme } from "../../app/themes/theme";
 import { TabContext, TabPanel } from "@mui/lab";
 import ExhibitionOrders from "./ExhibitionOrders";
 import ExhibitionArtpieces from "./ExhibitionArtpieces";
+import RoomList from "../rooms/RoomList";
 
 export default observer(function ExhibitionPage() {
     const { t } = useTranslation();
@@ -109,7 +110,7 @@ export default observer(function ExhibitionPage() {
                             </Tabs>
                         </Box>
                         <TabPanel value='rooms'>
-
+                            <RoomList exhibition={exhibition} />
                         </TabPanel>
                         <TabPanel value='orders'>
                             <ExhibitionOrders exhibitionId={exhibition.exhibitionId} />

@@ -17,7 +17,9 @@
     "artpieces": "Loading artpieces...",
     "artpiece": "Loading artpiece...",
     "orders": "Loading orders...",
-    "order": "Loading order..."
+    "order": "Loading order...",
+    "room": "Loading room...",
+    "rooms": "Loading rooms..."
   },
   "months": {
     "January": "January",
@@ -117,7 +119,16 @@
   "order": {
     "order": "Order",
     "adress": "Adress",
-    "make": "Make an order"
+    "make": "Make an order",
+    "action": {
+      "approve": "Approve",
+      "accept": "Accept order",
+      "inProgress": "Set in progress",
+      "deliver": "Deliver",
+      "decline": "Decline",
+      "cancel": "Cancel",
+      "return": "Return"
+    }
   },
   "status": {
     "status": "Status",
@@ -134,7 +145,10 @@
   "room": {
     "room": "Room",
     "rooms": "Rooms",
+    "name": "Name",
+    "add": "Add room",
     "limit": "Max number of artpieces",
-    "current": "Current number of artpieces"
+    "current": "Current number of artpieces",
+    "artpieces": "Artpieces"
   }
 }

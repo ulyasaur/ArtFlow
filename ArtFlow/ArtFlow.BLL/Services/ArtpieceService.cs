@@ -205,7 +205,10 @@ namespace ArtFlow.BLL.Services
                             .FirstOrDefault().Status == DeliveryStatus.Returned
                         || a.Orders
                             .OrderByDescending(o => o.UpdatedOn)
-                            .FirstOrDefault().Status == DeliveryStatus.Declined)
+                            .FirstOrDefault().Status == DeliveryStatus.Declined
+                        || a.Orders
+                            .OrderByDescending(o => o.UpdatedOn)
+                            .FirstOrDefault().Status == DeliveryStatus.Canceled)
                     .ToListAsync();
                 return artpieces;
             }
@@ -405,6 +408,42 @@ namespace ArtFlow.BLL.Services
                 }
             }
             return sb.ToString();
+        }
+
+        public async Task<List<Artpiece>> GetRoomAvailableArtpiecesAsync(int exhibitionId)
+        {
+            if (exhibitionId <= 0)
+            {
+                throw new ArgumentNullException("Exhibition id must be greater than 0");
+            }
+
+            try
+            {
+                List<int> roomIds = await this._exhibitionRepository
+                    .GetAll()
+                    .Include(r => r.Rooms)
+                    .Where(e => e.ExhibitionId == exhibitionId)
+                    .SelectMany(r => r.Rooms)
+                    .Select(r => r.RoomId)
+                    .ToListAsync();
+
+                List<Artpiece> artpieces = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
+                    .Include(k => k.KeepRecommendation)
+                    .Include(ea => ea.RoomArtpieces)
+                    .Include(ea => ea.ExhibitionArtpieces)
+                    .Where(a => !a.RoomArtpieces.Any(ra => roomIds.Contains(ra.RoomId)) && a.ExhibitionArtpieces.Any(ea => ea.ExhibitionId == exhibitionId))
+                    .ToListAsync();
+                return artpieces;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                throw;
+            }
         }
     }
 }

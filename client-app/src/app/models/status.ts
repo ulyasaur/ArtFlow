@@ -1,7 +1,7 @@
 export enum DeliveryStatus {
     Registered,
     ApprovedByOwner,
-    Paid,
+    // Paid,
     ApprovedByDriver,
     InProgress,
     Delivered,

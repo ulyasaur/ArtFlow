@@ -5,26 +5,23 @@ import { theme } from "../../app/themes/theme";
 import { Order } from "../../app/models/order";
 import placeholder from "../../assets/placeholder.png";
 import { router } from "../../app/router/router";
+import OrderActionButton from "./OrderActionButton";
 
 interface Props {
     order: Order;
+    action?: boolean;
 }
 
-export default observer(function OrderCard({ order }: Props) {
+export default observer(function OrderCard({ order, action }: Props) {
     const { t } = useTranslation();
 
     return (
         <ThemeProvider theme={theme}>
             <ListItem
-            // secondaryAction={
-            //     artpiece.owner.id === currentUser?.id
-            //         ? <IconButton
-            //             onClick={() => deleteArtpiece(artpiece.artpieceId)}
-            //         >
-            //             <DeleteOutlineIcon />
-            //         </IconButton>
-            //         : null
-            // }
+                secondaryAction={
+                    action &&
+                    <OrderActionButton order={order} />
+                }
             >
                 <ListItemAvatar
                     onClick={() => router.navigate(`/orders/${order.orderId}`)}
@@ -39,7 +36,7 @@ export default observer(function OrderCard({ order }: Props) {
                 <ListItemText
                     onClick={() => router.navigate(`/orders/${order.orderId}`)}
                     primary={`${t("order.order")} №${order.orderId}`}
-                    //secondary={artpiece.authorName}
+                //secondary={artpiece.authorName}
                 />
             </ListItem>
         </ThemeProvider>

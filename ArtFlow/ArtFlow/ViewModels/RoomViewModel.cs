@@ -10,7 +10,7 @@ namespace ArtFlow.ViewModels
 
         public int ExhibitionId { get; set; }
 
-        public string ExhibitionName { get; set; }
+        public ExhibitionViewModel Exhibition { get; set; }
 
         public int NumberOfPieces { get; set; }
 
