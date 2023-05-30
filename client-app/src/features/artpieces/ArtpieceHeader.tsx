@@ -7,6 +7,9 @@ import UserCard from "../users/UserCard";
 import { Artpiece } from "../../app/models/artpiece";
 import placeholder from "../../assets/placeholder.png";
 import PersonIcon from '@mui/icons-material/Person';
+import celsiusToFahrenheit from "../../app/formatting/temperature/celsiusToFahrenheit";
+import { useEffect, useState } from "react";
+import { useStore } from "../../app/stores/store";
 
 interface Props {
     artpiece: Artpiece;
@@ -14,6 +17,26 @@ interface Props {
 
 export default observer(function ArtpieceHeader({ artpiece }: Props) {
     const { t } = useTranslation();
+    const { artpieceStore: { tempUnit } } = useStore();
+    
+    const [artpieceTemperature, setArtpieceTemperature] = useState({
+        minTemperature: artpiece.keepRecommendation.minTemperature,
+        maxTemperature: artpiece.keepRecommendation.maxTemperature,
+    });
+
+    useEffect(() => {
+        if (tempUnit === 'f') {
+            setArtpieceTemperature({
+                minTemperature: celsiusToFahrenheit(artpieceTemperature.minTemperature),
+                maxTemperature: celsiusToFahrenheit(artpieceTemperature.maxTemperature),
+            });
+        } else {
+            setArtpieceTemperature({
+                minTemperature: artpiece.keepRecommendation.minTemperature,
+                maxTemperature: artpiece.keepRecommendation.maxTemperature,
+            });
+        }
+    }, [tempUnit])
 
     return (
         <ThemeProvider theme={theme}>
@@ -75,7 +98,7 @@ export default observer(function ArtpieceHeader({ artpiece }: Props) {
                         xs={4}
                     >
                         <UserCard user={artpiece.owner} description={t("roles.ArtOwner")} />
-                        <Card sx={{marginLeft: "10px"}}>
+                        <Card sx={{ marginLeft: "10px" }}>
                             <CardHeader
                                 sx={{
                                     textAlign: "center",
@@ -90,23 +113,23 @@ export default observer(function ArtpieceHeader({ artpiece }: Props) {
                                 }}
                             />
                             <CardContent>
-                            <Typography>
-                                    {`${t("keeprecommendation.minTemperature")}: ${artpiece.keepRecommendation.minTemperature}°C`}
+                                <Typography>
+                                    {`${t("keeprecommendation.minTemperature")}: ${artpieceTemperature.minTemperature.toFixed(2)}°${tempUnit?.toUpperCase()}`}
                                 </Typography>
                                 <Typography>
-                                    {`${t("keeprecommendation.maxTemperature")}: ${artpiece.keepRecommendation.maxTemperature}°C`}
+                                    {`${t("keeprecommendation.maxTemperature")}: ${artpieceTemperature.maxTemperature.toFixed(2)}°${tempUnit?.toUpperCase()}`}
                                 </Typography>
                                 <Typography>
-                                    {`${t("keeprecommendation.minHumidity")}: ${artpiece.keepRecommendation.minHumidity}%`}
+                                    {`${t("keeprecommendation.minHumidity")}: ${artpiece.keepRecommendation.minHumidity.toFixed(2)}%`}
                                 </Typography>
                                 <Typography>
-                                    {`${t("keeprecommendation.maxHumidity")}: ${artpiece.keepRecommendation.maxHumidity}%`}
+                                    {`${t("keeprecommendation.maxHumidity")}: ${artpiece.keepRecommendation.maxHumidity.toFixed(2)}%`}
                                 </Typography>
                                 <Typography>
-                                    {`${t("keeprecommendation.minLight")}: ${artpiece.keepRecommendation.minLight}%`}
+                                    {`${t("keeprecommendation.minLight")}: ${artpiece.keepRecommendation.minLight.toFixed(2)}%`}
                                 </Typography>
                                 <Typography>
-                                    {`${t("keeprecommendation.maxLight")}: ${artpiece.keepRecommendation.maxLight}%`}
+                                    {`${t("keeprecommendation.maxLight")}: ${artpiece.keepRecommendation.maxLight.toFixed(2)}%`}
                                 </Typography>
                             </CardContent>
                         </Card>

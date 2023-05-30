@@ -12,7 +12,6 @@ namespace ArtFlow.BLL.Validator
         public bool Validate(Exhibition entity)
         {
             return !string.IsNullOrWhiteSpace(entity.Name)
-                && !string.IsNullOrEmpty(entity.Description)
                 && !string.IsNullOrEmpty(entity.Adress)
                 && entity.StartDate <= entity.EndDate;
         }

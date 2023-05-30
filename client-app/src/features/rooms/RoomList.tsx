@@ -1,3 +1,4 @@
+import React from "react";
 import { ThemeProvider } from "@emotion/react";
 import { observer } from "mobx-react-lite";
 import { theme } from "../../app/themes/theme";

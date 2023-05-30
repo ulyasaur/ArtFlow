@@ -12,11 +12,12 @@ import { ErrorMessage, Formik } from "formik";
 import FormTextField from "../../app/common/form/FormTextField";
 import { LoadingButton } from "@mui/lab";
 import { ArtpieceFormValues } from "../../app/models/artpiece";
+import fahrenheitToCelsius from "../../app/formatting/temperature/fahrenheitToCelsius";
 
 export default observer(function ArtpieceAddForm() {
     const { t } = useTranslation();
     const { artpieceStore } = useStore();
-    const { addArtpiece } = artpieceStore;
+    const { addArtpiece, tempUnit } = artpieceStore;
     const navigate = useNavigate();
 
     const [files, setFiles] = useState<any>([]);
@@ -30,8 +31,13 @@ export default observer(function ArtpieceAddForm() {
             artpiece.name = values.name;
             artpiece.description = values.description;
             artpiece.authorName = values.authorName;
-            artpiece.minTemperature = values.minTemperature;
-            artpiece.maxTemperature = values.maxTemperature;
+            if (tempUnit === "f") {
+                artpiece.minTemperature = fahrenheitToCelsius(parseFloat(values.minTemperature));
+                artpiece.maxTemperature = fahrenheitToCelsius(parseFloat(values.maxTemperature));
+            } else {
+                artpiece.minTemperature = values.minTemperature;
+                artpiece.maxTemperature = values.maxTemperature;
+            }
             artpiece.minHumidity = values.minHumidity;
             artpiece.maxHumidity = values.maxHumidity;
             artpiece.minLight = values.minLight;
@@ -78,7 +84,7 @@ export default observer(function ArtpieceAddForm() {
 
                 <CardContent>
                     <Formik
-                        initialValues={{ 
+                        initialValues={{
                             name: "",
                             description: "",
                             authorName: "",
@@ -88,7 +94,7 @@ export default observer(function ArtpieceAddForm() {
                             maxHumidity: 0,
                             minLight: 0,
                             maxLight: 0,
-                            error: null 
+                            error: null
                         }}
                         onSubmit={(values) => handleFormSubmit(values)}
                     >
@@ -105,6 +111,7 @@ export default observer(function ArtpieceAddForm() {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <FormTextField
+                                            required
                                             label={t("artpiece.authorName").toString()}
                                             placeholder={t("artpiece.authorName").toString()}
                                             name="authorName"
@@ -137,7 +144,7 @@ export default observer(function ArtpieceAddForm() {
                                             label={t("keeprecommendation.minTemperature").toString()}
                                             placeholder={t("keeprecommendation.minTemperature").toString()}
                                             name="minTemperature"
-                                            InputProps={{ startAdornment: <InputAdornment position="start">°C</InputAdornment> }}
+                                            InputProps={{ startAdornment: <InputAdornment position="start">°{tempUnit?.toUpperCase()}</InputAdornment> }}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -147,7 +154,7 @@ export default observer(function ArtpieceAddForm() {
                                             label={t("keeprecommendation.maxTemperature").toString()}
                                             placeholder={t("keeprecommendation.maxTemperature").toString()}
                                             name="maxTemperature"
-                                            InputProps={{ startAdornment: <InputAdornment position="start">°C</InputAdornment> }}
+                                            InputProps={{ startAdornment: <InputAdornment position="start">°{tempUnit?.toUpperCase()}</InputAdornment> }}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>

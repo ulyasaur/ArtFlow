@@ -46,7 +46,7 @@ export default observer(function ExhibitionForm() {
             editingExhibition.adress = values.adress;
 
             await updateExhibition(editingExhibition);
-            navigate(`/exhibition/${editingExhibition.exhibitionId}`);
+            navigate(`/exhibitions/${editingExhibition.exhibitionId}`);
         }
     }
 

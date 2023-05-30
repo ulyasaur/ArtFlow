@@ -15,6 +15,7 @@ import { Navigate, useLocation } from 'react-router-dom';
 import { observer } from 'mobx-react-lite';
 import backgroundPic from "../../assets/backgroud-picture.jpg";
 import { useTranslation } from 'react-i18next';
+import LanguageSwitch from '../../app/common/switches/LanguageSwitch';
 
 export default observer(function HomePage() {
     const { t, i18n } = useTranslation();
@@ -45,28 +46,18 @@ export default observer(function HomePage() {
 
     return (
         <ThemeProvider theme={theme}>
-            <Stack 
-            sx={{ 
-                position: 'absolute', 
-                marginLeft: "20px", 
-                marginTop: "10px",
-                backgroundColor: "hotpink", 
-                paddingLeft: "20px",
-                paddingRight: "20px",
-                borderRadius: "20px"
-                }} 
-                direction="row" 
-                alignItems="center"
-                >
-                <Typography color={"white"}>EN</Typography>
-                <Switch
-                    checked={checked}
-                    onChange={e => handleChecked(e)}
-                    color="default"
-                    size="medium"
-                />
-                <Typography color={"white"}>UA</Typography>
-            </Stack>
+            <Box
+                sx={{
+                    position: 'absolute',
+                    marginLeft: "20px",
+                    marginTop: "10px",
+                    backgroundColor: "hotpink",
+                    paddingLeft: "20px",
+                    paddingRight: "20px",
+                    borderRadius: "20px"
+                }}>
+                    <LanguageSwitch />
+            </Box>
 
             <Grid container component="main" sx={{ height: '100vh' }}>
                 <CssBaseline />

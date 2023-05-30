@@ -25,6 +25,20 @@ export default class OrderStore {
         );
     }
 
+    loadOrderStates = async (orderId: number) => {
+        this.loadingStatus = true;
+        try {
+            const states = await agent.States.getOrderStates(orderId);
+            runInAction(() => {
+                this.states = states;
+                this.loadingStatus = false;
+            });
+        } catch (error) {
+            console.log(error);
+            runInAction(() => this.loadingStatus = false);
+        }
+    }
+
     loadExhibitionOrders = async (exhibitionId: number) => {
         this.loading = true;
         try {

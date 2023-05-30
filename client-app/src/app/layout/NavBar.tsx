@@ -1,4 +1,4 @@
-import { alpha, AppBar, Autocomplete, Avatar, Box, Button, Container, Divider, Icon, IconButton, Link, ListItemIcon, Menu, MenuItem, Stack, styled, Switch, Toolbar, Tooltip, Typography } from '@mui/material';
+import { AppBar, Avatar, Box, Button, Container, Divider, Icon, IconButton, Link, ListItemIcon, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@mui/material';
 import logo from "../../assets/logo.png";
 import userPlaceholder from "../../assets/user.png";
 import * as React from 'react';
@@ -12,25 +12,14 @@ import { Link as RouterLink } from "react-router-dom";
 import { router } from '../router/router';
 import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import LanguageSwitch from '../common/switches/LanguageSwitch';
+import TemperatureSwitch from '../common/switches/TemperatureSwitch';
 
 function NavBar() {
   const { t, i18n } = useTranslation();
   const { userStore: { currentUser, isLoggedIn, logout } } = useStore();
-  const [checked, setChecked] = useState(localStorage.getItem("i18nextLng") === "uk");
 
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-
-  const handleChecked = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.checked) {
-      i18n.changeLanguage('uk');
-      localStorage.setItem("i18nextLng", "uk");
-      setChecked(true);
-    } else {
-      i18n.changeLanguage('en');
-      localStorage.setItem("i18nextLng", "en");
-      setChecked(false);
-    }
-  }
 
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
@@ -39,39 +28,6 @@ function NavBar() {
   const handleCloseUserMenu = () => {
     setAnchorElUser(null);
   };
-
-  // const Search = styled('div')(({ theme }) => ({
-  //   position: 'relative',
-  //   borderColor: theme.palette.common.white,
-  //   borderRadius: theme.shape.borderRadius,
-  //   backgroundColor: alpha(theme.palette.common.white, 0.25),
-  //   '&:hover': {
-  //     backgroundColor: alpha(theme.palette.common.white, 0.5),
-  //   },
-  //   marginLeft: 0,
-  //   width: '100%',
-  //   [theme.breakpoints.up('sm')]: {
-  //     marginLeft: theme.spacing(1),
-  //     width: 'auto',
-  //   },
-  // }));
-
-  // const StyledAutocomplete = styled(Autocomplete)(({ theme }) => ({
-  //   color: 'inherit',
-  //   '& .MuiInputBase-input': {
-  //     padding: theme.spacing(1, 1, 1, 0),
-  //     // vertical padding + font size from searchIcon
-  //     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-  //     transition: theme.transitions.create('width'),
-  //     width: '100%',
-  //     [theme.breakpoints.up('sm')]: {
-  //       width: '16ch',
-  //       '&:focus': {
-  //         width: '20ch',
-  //       },
-  //     },
-  //   },
-  // }));
 
   return (
     <ThemeProvider theme={theme}>
@@ -198,48 +154,8 @@ function NavBar() {
                   </Link>
                 </Box>
 
-
-                {/* <Search>
-                  <StyledAutocomplete
-                    renderInput={(params) => (
-                      <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                        <TextField
-                          {...params}
-                          placeholder='Search...'
-                          variant="outlined"
-                          size='small'
-                          InputProps={{
-                            startAdornment: (
-                              <InputAdornment position="start">
-                                <SearchIcon sx={{ color: "white" }} />
-                              </InputAdornment>
-                            ),
-                          }}
-                        />
-                      </Box>)}
-                    options={[]}
-                    freeSolo
-                    handleHomeEndKeys
-                    onChange={async (event, value) => {
-                      if (value) {
-                        if (typeof (value) === 'string') {
-                          router.navigate(`/search/${value}`);
-                        }
-                      }
-                    }}
-                  />
-                </Search> */}
-
-                <Stack direction="row" alignItems="center">
-                  <Typography>EN</Typography>
-                  <Switch
-                    checked={checked}
-                    onChange={e => handleChecked(e)}
-                    color="default"
-                    size="medium"
-                  />
-                  <Typography>UA</Typography>
-                </Stack>
+                <TemperatureSwitch />
+                <LanguageSwitch />
 
                 <Box sx={{ flexGrow: 0, padding: "2px" }}>
                   <Tooltip title={t("navbar.menu")}>

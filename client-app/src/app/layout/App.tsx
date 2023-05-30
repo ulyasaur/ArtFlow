@@ -23,6 +23,11 @@ function App() {
       i18n.changeLanguage(lang);
     }
 
+    let temp = localStorage.getItem("temp");
+    if (!temp) {
+      localStorage.setItem("temp", "c");
+    }
+
     if (userStore.token) {
       userStore.getUser().finally(() => setAppLoaded(true));
     } else {

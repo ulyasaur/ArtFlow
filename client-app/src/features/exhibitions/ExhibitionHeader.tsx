@@ -7,7 +7,7 @@ import backgroundPic from "../../assets/backgroud-picture.jpg";
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import LocationOnIcon from '@mui/icons-material/LocationOn';
 import UserCard from "../users/UserCard";
-import FormatFullDate from "../../app/formatting/formatFullDate";
+import FormatFullDate from "../../app/formatting/date/formatFullDate";
 
 interface Props {
     exhibition: Exhibition;

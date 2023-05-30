@@ -3,8 +3,10 @@ import { Link as RouterLink } from "react-router-dom";
 import { theme } from "../../app/themes/theme";
 import NotFoundRobot from '../../assets/not-found.jpg';
 import { Button, Card, CardContent, Grid, Link, Typography } from "@mui/material";
+import { useTranslation } from "react-i18next";
 
 export default function NotFound() {
+    const {t} = useTranslation();
     return (
         <ThemeProvider theme={theme}>
             <Card
@@ -29,7 +31,7 @@ export default function NotFound() {
                                     marginTop: "auto",
                                     marginBottom: "auto"
                                 }}>
-                                Oops - we've looked everywhere but could not find what you are looking for!
+                                {t("error.not-found")}
                                 <Link
                                     style={{
                                         textDecoration: "none"
@@ -41,7 +43,7 @@ export default function NotFound() {
                                             fontSize: "12pt"
                                         }}
                                     >
-                                        Return to home page
+                                        {t("error.return")}
                                     </Button>
                                 </Link>
                             </Typography>

@@ -6,7 +6,7 @@ import { router } from "../../app/router/router";
 import FestivalIcon from '@mui/icons-material/Festival';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import formatDate from "../../app/formatting/formatDate";
+import formatDate from "../../app/formatting/date/formatDate";
 import { Exhibition } from "../../app/models/exhibition";
 
 interface Props {

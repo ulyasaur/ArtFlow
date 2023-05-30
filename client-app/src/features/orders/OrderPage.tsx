@@ -8,6 +8,8 @@ import { ThemeProvider } from "@emotion/react";
 import { theme } from "../../app/themes/theme";
 import OrderHeader from "./OrderHeader";
 import { Card, CardHeader } from "@mui/material";
+import { DeliveryStatus } from "../../app/models/status";
+import StateDisplay from "../states/StateDisplay";
 
 export default observer(function OrderPage() {
     const { t } = useTranslation();
@@ -47,7 +49,14 @@ export default observer(function OrderPage() {
                     }}
                 />
                 <OrderHeader order={order} />
-            </Card>            
+                
+                {
+                    DeliveryStatus[order.status].toString() === "InProgress"
+                        ? <StateDisplay orderId={order.orderId} keepRecommendation={order.artpiece.keepRecommendation} />
+                        : null
+                }
+
+            </Card>
         </ThemeProvider>
     );
 })

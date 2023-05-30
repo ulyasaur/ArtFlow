@@ -10,6 +10,8 @@ import { Exhibition } from "../models/exhibition";
 import { Artpiece, ArtpieceFormValues } from "../models/artpiece";
 import { Order, OrderFormValues } from "../models/order";
 import { Room } from "../models/room";
+import { State } from "../models/state";
+import { useTranslation } from "react-i18next";
 
 axios.defaults.baseURL = "http://localhost:5244/api";
 
@@ -34,7 +36,8 @@ axios.interceptors.response.use(async response => {
     return response;
 }, (error: AxiosError) => {
     const { data, status, config } = error.response as AxiosResponse;
-
+    const {t} = useTranslation();
+    
     switch (status) {
         case 400:
             if (config.method === "get" && data.errors.hasOwnProperty("id")) {
@@ -45,16 +48,16 @@ axios.interceptors.response.use(async response => {
             }
             break;
         case 401:
-            toast.error('Unauthorised');
+            toast.error(t('error.unauthorised'));
             break;
         case 403:
-            toast.error("Forbidden");
+            toast.error(t("error.forbidden"));
             break;
         case 404:
             router.navigate("/not-found")
             break;
         case 500:
-            toast.error("Server error");
+            toast.error(t("error.server"));
             break;
     }
 
@@ -109,12 +112,12 @@ const Artpieces = {
         formData.append("Name", artpiece.name!);
         formData.append("Description", artpiece.description!);
         formData.append("AuthorName", artpiece.authorName!);
-        formData.append("MinTemperature", artpiece.minTemperature.toString());
-        formData.append("MaxTemperature", artpiece.maxTemperature.toString());
-        formData.append("MinHumidity", artpiece.minHumidity.toString());
-        formData.append("MaxHumidity", artpiece.maxHumidity.toString());
-        formData.append("MinLight", artpiece.minLight.toString());
-        formData.append("MaxLight", artpiece.maxLight.toString());
+        formData.append("MinTemperature", artpiece.minTemperature.toString().replace(".", ","));
+        formData.append("MaxTemperature", artpiece.maxTemperature.toString().replace(".", ","));
+        formData.append("MinHumidity", artpiece.minHumidity.toString().replace(".", ","));
+        formData.append("MaxHumidity", artpiece.maxHumidity.toString().replace(".", ","));
+        formData.append("MinLight", artpiece.minLight.toString().replace(".", ","));
+        formData.append("MaxLight", artpiece.maxLight.toString().replace(".", ","));
         return axios.post<Artpiece>("/artpieces", formData, {
             headers: { "Content-Type": "multipart/form-data" }
         });
@@ -157,13 +160,18 @@ const Rooms = {
     deleteArtpieceFromRoom: (roomId: number, artpieceId: string) => requests.del(`/rooms/${roomId}/${artpieceId}`)
 }
 
+const States = {
+    getOrderStates: (orderId: number) => requests.get<State[]>(`/states/${orderId}`)
+}
+
 const agent = {
     Account,
     Profiles,
     Exhibitions,
     Artpieces, 
     Orders,
-    Rooms
+    Rooms,
+    States
 };
 
 export default agent;

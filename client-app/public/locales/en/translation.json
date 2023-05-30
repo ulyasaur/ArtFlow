@@ -19,7 +19,8 @@
     "orders": "Loading orders...",
     "order": "Loading order...",
     "room": "Loading room...",
-    "rooms": "Loading rooms..."
+    "rooms": "Loading rooms...",
+    "state": "Loading statistics..."
   },
   "months": {
     "January": "January",
@@ -150,5 +151,27 @@
     "limit": "Max number of artpieces",
     "current": "Current number of artpieces",
     "artpieces": "Artpieces"
+  },
+  "state": {
+    "state": "State",
+    "statistics": "Statistics",
+    "humidity": "Humidity",
+    "light": "Light",
+    "temperature": "Temperature"
+  },
+  "chart": {
+    "min": "Min value",
+    "max": "Max value"
+  },
+  "error": {
+    "unauthorised": "Unauthorised",
+    "forbidden": "Forbidden",
+    "server": "Server error",
+    "not-found": "Oops - we've looked everywhere but could not find what you are looking for!",
+    "return": "Return to home page"
+  },
+  "lang": {
+    "uk": "Ukrainian",
+    "en": "English"
   }
 }

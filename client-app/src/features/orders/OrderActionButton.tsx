@@ -25,7 +25,9 @@ export default observer(function OrderActionButton({ order }: Props) {
         loadingStatus
     } = orderStore;
 
-    if (DeliveryStatus[order.status].toString() === "Declined" || DeliveryStatus[order.status].toString() === "Canceled") {
+    if (DeliveryStatus[order.status].toString() === "Declined" 
+            || DeliveryStatus[order.status].toString() === "Canceled" 
+            || DeliveryStatus[order.status].toString() === "Returned") {
         return null;
     }
 

@@ -13,12 +13,14 @@ import LoadingComponent from "../../app/layout/LoadingComponent";
 import placeholder from "../../assets/placeholder.png";
 import PhotoUploadWidget from "../../app/common/photo/PhotoUploadWidget";
 import { PhotoCamera } from "@mui/icons-material";
+import fahrenheitToCelsius from "../../app/formatting/temperature/fahrenheitToCelsius";
+import celsiusToFahrenheit from "../../app/formatting/temperature/celsiusToFahrenheit";
 
 export default observer(function ArtpieceUpdateForm() {
     const { t } = useTranslation();
     const { artpieceId } = useParams<string>();
     const { artpieceStore } = useStore();
-    const { artpiece, loadArtpiece, loading, updateArtpiece, uploadArtpiecePicture } = artpieceStore;
+    const { artpiece, loadArtpiece, loading, updateArtpiece, uploadArtpiecePicture, tempUnit } = artpieceStore;
     const navigate = useNavigate();
 
     const [openDialog, setOpenDialog] = useState(false);
@@ -29,8 +31,13 @@ export default observer(function ArtpieceUpdateForm() {
         editingArtpiece.name = values.name;
         editingArtpiece.description = values.description;
         editingArtpiece.authorName = values.authorName;
-        editingArtpiece.minTemperature = values.minTemperature;
-        editingArtpiece.maxTemperature = values.maxTemperature;
+        if (tempUnit === "f") {
+            editingArtpiece.minTemperature = fahrenheitToCelsius(parseFloat(values.minTemperature));
+            editingArtpiece.maxTemperature = fahrenheitToCelsius(parseFloat(values.maxTemperature));
+        } else {
+            editingArtpiece.minTemperature = values.minTemperature;
+            editingArtpiece.maxTemperature = values.maxTemperature;
+        }
         editingArtpiece.minHumidity = values.minHumidity;
         editingArtpiece.maxHumidity = values.maxHumidity;
         editingArtpiece.minLight = values.minLight;
@@ -49,15 +56,20 @@ export default observer(function ArtpieceUpdateForm() {
                 editingArtpiece.description = artpiece.description;
                 editingArtpiece.authorName = artpiece.authorName;
                 editingArtpiece.keepRecommendationId = artpiece.keepRecommendation.keepRecommendationId;
-                editingArtpiece.minTemperature = artpiece.keepRecommendation.minTemperature;
-                editingArtpiece.maxTemperature = artpiece.keepRecommendation.maxTemperature;
+                if (tempUnit === "f") {
+                    editingArtpiece.minTemperature = celsiusToFahrenheit(artpiece.keepRecommendation.minTemperature);
+                    editingArtpiece.maxTemperature = celsiusToFahrenheit(artpiece.keepRecommendation.maxTemperature);
+                } else {
+                    editingArtpiece.minTemperature = artpiece.keepRecommendation.minTemperature;
+                    editingArtpiece.maxTemperature = artpiece.keepRecommendation.maxTemperature;
+                }
                 editingArtpiece.minHumidity = artpiece.keepRecommendation.minHumidity;
                 editingArtpiece.maxHumidity = artpiece.keepRecommendation.maxHumidity;
                 editingArtpiece.minLight = artpiece.keepRecommendation.minLight;
                 editingArtpiece.maxLight = artpiece.keepRecommendation.maxLight;
             }
         }
-    }, [artpieceId, loadArtpiece]);
+    }, [artpieceId, tempUnit, editingArtpiece, loadArtpiece]);
 
     if (loading) {
         return <LoadingComponent content={t("loading.artpiece").toString()} />
@@ -132,6 +144,7 @@ export default observer(function ArtpieceUpdateForm() {
                                     </Grid>
                                     <Grid item xs={12}>
                                         <FormTextField
+                                            required
                                             label={t("artpiece.authorName").toString()}
                                             placeholder={t("artpiece.authorName").toString()}
                                             defaultValue={editingArtpiece.authorName}
@@ -165,9 +178,9 @@ export default observer(function ArtpieceUpdateForm() {
                                             type="number"
                                             label={t("keeprecommendation.minTemperature").toString()}
                                             placeholder={t("keeprecommendation.minTemperature").toString()}
-                                            defaultValue={editingArtpiece.minTemperature}
+                                            defaultValue={editingArtpiece.minTemperature.toFixed(2)}
                                             name="minTemperature"
-                                            InputProps={{ startAdornment: <InputAdornment position="start">°C</InputAdornment> }}
+                                            InputProps={{ startAdornment: <InputAdornment position="start">°{tempUnit?.toUpperCase()}</InputAdornment> }}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -176,9 +189,9 @@ export default observer(function ArtpieceUpdateForm() {
                                             type="number"
                                             label={t("keeprecommendation.maxTemperature").toString()}
                                             placeholder={t("keeprecommendation.maxTemperature").toString()}
-                                            defaultValue={editingArtpiece.maxTemperature}
+                                            defaultValue={editingArtpiece.maxTemperature.toFixed(2)}
                                             name="maxTemperature"
-                                            InputProps={{ startAdornment: <InputAdornment position="start">°C</InputAdornment> }}
+                                            InputProps={{ startAdornment: <InputAdornment position="start">°{tempUnit?.toUpperCase()}</InputAdornment> }}
                                         />
                                     </Grid>
                                     <Grid item xs={12}>
@@ -187,7 +200,7 @@ export default observer(function ArtpieceUpdateForm() {
                                             type="number"
                                             label={t("keeprecommendation.minHumidity").toString()}
                                             placeholder={t("keeprecommendation.minHumidity").toString()}
-                                            defaultValue={editingArtpiece.minHumidity}
+                                            defaultValue={editingArtpiece.minHumidity.toFixed(2)}
                                             name="minHumidity"
                                             InputProps={{ min: 0, max: 100, startAdornment: <InputAdornment position="start">%</InputAdornment> }}
                                         />
@@ -198,7 +211,7 @@ export default observer(function ArtpieceUpdateForm() {
                                             type="number"
                                             label={t("keeprecommendation.maxHumidity").toString()}
                                             placeholder={t("keeprecommendation.maxHumidity").toString()}
-                                            defaultValue={editingArtpiece.maxHumidity}
+                                            defaultValue={editingArtpiece.maxHumidity.toFixed(2)}
                                             name="maxHumidity"
                                             InputProps={{ min: 0, max: 100, startAdornment: <InputAdornment position="start">%</InputAdornment> }}
                                         />
@@ -209,7 +222,7 @@ export default observer(function ArtpieceUpdateForm() {
                                             type="number"
                                             label={t("keeprecommendation.minLight").toString()}
                                             placeholder={t("keeprecommendation.minLight").toString()}
-                                            defaultValue={editingArtpiece.minLight}
+                                            defaultValue={editingArtpiece.minLight.toFixed(2)}
                                             name="minLight"
                                             InputProps={{ min: 0, max: 100, startAdornment: <InputAdornment position="start">%</InputAdornment> }}
                                         />
@@ -220,7 +233,7 @@ export default observer(function ArtpieceUpdateForm() {
                                             type="number"
                                             label={t("keeprecommendation.maxLight").toString()}
                                             placeholder={t("keeprecommendation.maxLight").toString()}
-                                            defaultValue={editingArtpiece.maxLight}
+                                            defaultValue={editingArtpiece.maxLight.toFixed(2)}
                                             name="maxLight"
                                             InputProps={{ min: 0, max: 100, startAdornment: <InputAdornment position="start">%</InputAdornment> }}
                                         />

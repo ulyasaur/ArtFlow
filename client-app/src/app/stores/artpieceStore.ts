@@ -8,6 +8,7 @@ export default class ArtpieceStore {
     artpieces: Artpiece[] | null = null;
     artpiece: Artpiece | null = null;
     order: Order | null = null;
+    tempUnit: string | null = localStorage.getItem("temp");
     loading = false;
 
     constructor() {
@@ -158,5 +159,10 @@ export default class ArtpieceStore {
             console.log(error);
             runInAction(() => this.loading = false);
         }
+    }
+
+    setTempUnit = (unit: string) => {
+        this.tempUnit = unit;
+        localStorage.setItem("temp", unit);
     }
 }
