@@ -24,7 +24,7 @@ namespace ArtFlow.Core.Entities
 
         public User? Driver { get; set; }
 
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
         public Artpiece Artpiece { get; set; }
 

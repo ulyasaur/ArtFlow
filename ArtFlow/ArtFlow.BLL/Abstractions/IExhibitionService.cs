@@ -13,9 +13,9 @@ namespace ArtFlow.BLL.Abstractions
 
         Task<Exhibition> GetExhibitionAsync(int exhibitionId);
 
-        Task AddExhibitionAsync(Exhibition exhibition);
+        Task<Exhibition> AddExhibitionAsync(Exhibition exhibition);
 
-        Task UpdateExhibitionAsync(Exhibition exhibition);
+        Task<Exhibition> UpdateExhibitionAsync(Exhibition exhibition);
 
         Task DeleteExhibitionAsync(int exhibitionId);
 }

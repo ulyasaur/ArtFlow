@@ -22,11 +22,13 @@ namespace ArtFlow.BLL.Abstractions
 
         Task<Order> GetOrderAsync(int orderId);
 
-        Task AddOrderAsync(Order order);
+        Task<Order> GetOrderByArtpieceAsync(string artpieceId);
+
+        Task<Order> AddOrderAsync(Order order);
 
         Task ApproveOrderByOwnerAsync(int orderId);
 
-        Task SetOrderPaidAsync(int orderId);        
+        //Task SetOrderPaidAsync(int orderId);        
 
         Task AcceptOrderByDriverAsync(int orderId, string driverId);
         

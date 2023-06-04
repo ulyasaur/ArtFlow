@@ -82,9 +82,12 @@ namespace ArtFlow.Controllers
 
                 exhibition.OrganiserId = this._userAccessor.GetUserId();
 
-                await this._exhibitionService.AddExhibitionAsync(exhibition);
+                Exhibition added = await this._exhibitionService.AddExhibitionAsync(exhibition);
 
-                return Ok();
+                ExhibitionViewModel exhibitionViewModel = new ExhibitionViewModel();
+                this._mapper.Map(added, exhibitionViewModel);
+
+                return Ok(exhibitionViewModel);
             }
             catch (Exception ex)
             {
@@ -103,9 +106,12 @@ namespace ArtFlow.Controllers
                 Exhibition exhibition = new Exhibition();
                 this._mapper.Map(exhibitionUpdateViewModel, exhibition);
 
-                await this._exhibitionService.UpdateExhibitionAsync(exhibition);
+                Exhibition updated = await this._exhibitionService.UpdateExhibitionAsync(exhibition);
 
-                return Ok();
+                ExhibitionViewModel exhibitionViewModel = new ExhibitionViewModel();
+                this._mapper.Map(updated, exhibitionViewModel);
+
+                return Ok(exhibitionViewModel);
             }
             catch (Exception ex)
             {
@@ -116,7 +122,7 @@ namespace ArtFlow.Controllers
         }
 
         [Authorize(Roles = "Organiser")]
-        [HttpDelete]
+        [HttpDelete("{exhibitionId}")]
         public async Task<IActionResult> DeleteExhibitionAsync(int exhibitionId)
         {
             try

@@ -20,6 +20,6 @@ namespace ArtFlow.ViewModels
 
         public string Adress { get; set; }
 
-        public List<RoomViewModel> Rooms { get; set; } 
+        /*public List<RoomViewModel> Rooms { get; set; } */
     }
 }

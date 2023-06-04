@@ -220,9 +220,12 @@ namespace ArtFlow.Controllers
                 order.UpdatedOn = DateTimeOffset.UtcNow;
                 order.CustomerId = this._userAccessor.GetUserId();
 
-                await this._orderService.AddOrderAsync(order);
+                Order added = await this._orderService.AddOrderAsync(order);
 
-                return Ok();
+                OrderViewModel addedViewModel = new OrderViewModel();
+                this._mapper.Map(added, addedViewModel);
+
+                return Ok(addedViewModel);
             }
             catch (Exception ex)
             {
@@ -250,7 +253,7 @@ namespace ArtFlow.Controllers
             }
         }
 
-        [Authorize(Roles = "Organiser")]
+        /*[Authorize(Roles = "Organiser")]
         [HttpPut("{orderId}/pay")]
         public async Task<IActionResult> SetOrderPaidAsync(int orderId)
         {
@@ -266,14 +269,15 @@ namespace ArtFlow.Controllers
 
                 return BadRequest(ex.Message);
             }
-        }
+        }*/
 
         [Authorize(Roles = "Driver")]
-        [HttpPut("{orderId}/{driverId}/accept")]
-        public async Task<IActionResult> AcceptOrderByDriverAsync(int orderId, string driverId)
+        [HttpPut("{orderId}/accept")]
+        public async Task<IActionResult> AcceptOrderByDriverAsync(int orderId)
         {
             try
             {
+                string driverId = this._userAccessor.GetUserId();
                 await this._orderService.AcceptOrderByDriverAsync(orderId, driverId);
 
                 return Ok();
@@ -367,6 +371,49 @@ namespace ArtFlow.Controllers
                 await this._orderService.SetOrderReturnedAsync(orderId);
 
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpGet("artpiece/{artpieceId}")]
+        public async Task<IActionResult> GetOrderIdByArtpieceAsync(string artpieceId)
+        {
+            try
+            {
+                Order order = await this._orderService.GetOrderByArtpieceAsync(artpieceId);
+
+                return Ok(order.OrderId);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+        
+        [HttpGet("artpiece/{artpieceId}/order")]
+        public async Task<IActionResult> GetOrderByArtpieceAsync(string artpieceId)
+        {
+            try
+            {
+                Order order = await this._orderService.GetOrderByArtpieceAsync(artpieceId);
+
+                if(order == null)
+                {
+                    return Ok(null);
+                }
+
+                OrderViewModel orderViewModel = new OrderViewModel();
+                this._mapper.Map(order, orderViewModel);
+
+                return Ok(orderViewModel);
             }
             catch (Exception ex)
             {

@@ -10,7 +10,7 @@
 
         public double Light { get; set; }
 
-        public DateTimeOffset CheckedOn { get; set; } 
+        public DateTimeOffset? CheckedOn { get; set; } 
 
         public int OrderId { get; set; }
     }

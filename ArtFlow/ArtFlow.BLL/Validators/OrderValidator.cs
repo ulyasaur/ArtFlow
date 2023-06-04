@@ -14,7 +14,7 @@ namespace ArtFlow.BLL.Validators
         {
             return !string.IsNullOrEmpty(entity.Adress)
                 && entity.ExhibitionId > 0
-                && entity.ArtpieceId > 0;
+                && !string.IsNullOrEmpty(entity.ArtpieceId);
         }
     }
 }

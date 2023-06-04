@@ -8,7 +8,6 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace ArtFlow.Controllers
 {
-    [Authorize]
     [Route("api/[controller]")]
     [ApiController]
     public class StatesController : ControllerBase
@@ -33,6 +32,7 @@ namespace ArtFlow.Controllers
             {
                 State state = new State();
                 this._mapper.Map(stateViewModel, state);
+                state.CheckedOn = DateTimeOffset.UtcNow;
 
                 bool isValid = await this._stateService.AddStateAsync(state);
 
@@ -63,6 +63,8 @@ namespace ArtFlow.Controllers
             }
         }
 
+
+        [Authorize]
         [HttpGet("{orderId}")] 
         public async Task<IActionResult> GetStatesForOrder(int orderId)
         {
@@ -83,6 +85,7 @@ namespace ArtFlow.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("latest/{orderId}")] 
         public async Task<IActionResult> GetLatestState(int orderId)
         {

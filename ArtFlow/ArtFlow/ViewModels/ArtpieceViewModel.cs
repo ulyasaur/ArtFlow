@@ -4,7 +4,7 @@ namespace ArtFlow.ViewModels
 {
     public class ArtpieceViewModel
     {
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
         public string PhotoId { get; set; }
 
@@ -15,6 +15,8 @@ namespace ArtFlow.ViewModels
         public string Description { get; set; }
 
         public string AuthorName { get; set; }
+
+        public string OwnerId { get; set; }
 
         public UserViewModel Owner { get; set; }
 

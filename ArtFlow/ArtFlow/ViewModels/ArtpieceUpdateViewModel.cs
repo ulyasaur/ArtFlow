@@ -4,7 +4,7 @@ namespace ArtFlow.ViewModels
 {
     public class ArtpieceUpdateViewModel
     {
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
         public string Name { get; set; }
 

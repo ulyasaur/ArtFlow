@@ -13,7 +13,7 @@ namespace ArtFlow.Core.Entities
 
         public Room Room { get; set; }
 
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
         public Artpiece Artpiece { get; set; }
     }

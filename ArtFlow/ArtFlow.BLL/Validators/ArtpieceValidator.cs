@@ -12,7 +12,6 @@ namespace ArtFlow.BLL.Validator
         public bool Validate(Artpiece entity)
         {
             return !string.IsNullOrEmpty(entity.Name)
-                && !string.IsNullOrEmpty(entity.Description)
                 && !string.IsNullOrEmpty(entity.AuthorName)
                 && !string.IsNullOrEmpty(entity.OwnerId);
         }

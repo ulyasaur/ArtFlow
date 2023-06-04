@@ -24,18 +24,14 @@ namespace ArtFlow.DAL.Migrations
 
             modelBuilder.Entity("ArtFlow.Core.Entities.Artpiece", b =>
                 {
-                    b.Property<int>("ArtpieceId")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("integer");
-
-                    NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("ArtpieceId"));
+                    b.Property<string>("ArtpieceId")
+                        .HasColumnType("text");
 
                     b.Property<string>("AuthorName")
                         .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("Name")
@@ -47,7 +43,6 @@ namespace ArtFlow.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("PhotoId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.HasKey("ArtpieceId");
@@ -72,7 +67,6 @@ namespace ArtFlow.DAL.Migrations
                         .HasColumnType("text");
 
                     b.Property<string>("Description")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<DateTimeOffset>("EndDate")
@@ -101,8 +95,8 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("ExhibitionId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ArtPieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtPieceId")
+                        .HasColumnType("text");
 
                     b.HasKey("ExhibitionId", "ArtPieceId");
 
@@ -119,8 +113,9 @@ namespace ArtFlow.DAL.Migrations
 
                     NpgsqlPropertyBuilderExtensions.UseIdentityByDefaultColumn(b.Property<int>("KeepRecommendationId"));
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<double>("MaxHumidity")
                         .HasColumnType("double precision");
@@ -160,8 +155,9 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired()
                         .HasColumnType("text");
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .IsRequired()
+                        .HasColumnType("text");
 
                     b.Property<string>("CustomerId")
                         .IsRequired()
@@ -242,8 +238,8 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("RoomId")
                         .HasColumnType("integer");
 
-                    b.Property<int>("ArtpieceId")
-                        .HasColumnType("integer");
+                    b.Property<string>("ArtpieceId")
+                        .HasColumnType("text");
 
                     b.HasKey("RoomId", "ArtpieceId");
 
@@ -290,6 +286,9 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<int>("AccessFailedCount")
                         .HasColumnType("integer");
 
+                    b.Property<string>("Bio")
+                        .HasColumnType("text");
+
                     b.Property<string>("ConcurrencyStamp")
                         .IsConcurrencyToken()
                         .HasColumnType("text");
@@ -332,6 +331,9 @@ namespace ArtFlow.DAL.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("boolean");
 
+                    b.Property<string>("PhotoId")
+                        .HasColumnType("text");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("text");
 
@@ -350,6 +352,8 @@ namespace ArtFlow.DAL.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -496,9 +500,7 @@ namespace ArtFlow.DAL.Migrations
 
                     b.HasOne("ArtFlow.Core.Entities.Photo", "Photo")
                         .WithMany()
-                        .HasForeignKey("PhotoId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("PhotoId");
 
                     b.Navigation("Owner");
 
@@ -626,6 +628,15 @@ namespace ArtFlow.DAL.Migrations
                         .IsRequired();
 
                     b.Navigation("Order");
+                });
+
+            modelBuilder.Entity("ArtFlow.Core.Entities.User", b =>
+                {
+                    b.HasOne("ArtFlow.Core.Entities.Photo", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId");
+
+                    b.Navigation("Photo");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

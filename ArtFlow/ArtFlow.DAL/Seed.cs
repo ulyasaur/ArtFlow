@@ -1,4 +1,5 @@
 ﻿using ArtFlow.Core.Entities;
+using ArtFlow.Core.Enums;
 using Microsoft.AspNetCore.Identity;
 using System;
 using System.Collections.Generic;
@@ -88,6 +89,92 @@ namespace ArtFlow.DAL
             };
 
             context.UserRoles.AddRange(identityUserRoles);
+
+            List<Artpiece> artpieces = new List<Artpiece>()
+            {
+                new Artpiece()
+                {
+                    ArtpieceId = "333DFCB6",
+                    Name = "Test1",
+                    Description = "test test",
+                    AuthorName = "Test Author",
+                    OwnerId = "c2ca5621-991c-48ed-bec3-b96441fa41da",
+                    KeepRecommendation = new KeepRecommendation()
+                    {
+                        MinTemperature = 10,
+                        MaxTemperature = 20,
+                        MinHumidity = 30,
+                        MaxHumidity = 60,
+                        MinLight = 10,
+                        MaxLight = 80
+                    }
+                },
+                new Artpiece()
+                {
+                    ArtpieceId = "33E21A10",
+                    Name = "Test2",
+                    Description = "test test",
+                    AuthorName = "Test Author",
+                    OwnerId = "c2ca5621-991c-48ed-bec3-b96441fa41da",
+                    KeepRecommendation = new KeepRecommendation()
+                    {
+                        MinTemperature = 10,
+                        MaxTemperature = 20,
+                        MinHumidity = 30,
+                        MaxHumidity = 60,
+                        MinLight = 10,
+                        MaxLight = 80
+                    }
+                }
+            };
+
+            context.Artpieces.AddRange(artpieces);
+
+            List<Exhibition> exhibitions = new List<Exhibition>()
+            {
+                new Exhibition()
+                {
+                    ExhibitionId = 1,
+                    Name = "Test exh",
+                    Description = "test test",
+                    OrganiserId = "ad183560-7a60-4a72-ad86-cdc908f24d6b",
+                    StartDate = DateTimeOffset.UtcNow,
+                    EndDate = DateTimeOffset.UtcNow,
+                    Adress = "test test test"
+                }
+            };
+
+            context.Exhibitions.AddRange(exhibitions);
+
+            List<Order> orders = new List<Order>()
+            {
+                new Order
+                {
+                    OrderId = 1,
+                    SellerId = "c2ca5621-991c-48ed-bec3-b96441fa41da",
+                    CustomerId = "ad183560-7a60-4a72-ad86-cdc908f24d6b",
+                    DriverId = "d7857ddd-8da9-43e7-bc2e-0d590e0b9717",
+                    ArtpieceId = "33E21A10",
+                    ExhibitionId = 1,
+                    Adress = "Test",
+                    Status = DeliveryStatus.ApprovedByDriver,
+                    UpdatedOn = DateTimeOffset.UtcNow
+                },
+                new Order
+                {
+                    OrderId = 2,
+                    SellerId = "c2ca5621-991c-48ed-bec3-b96441fa41da",
+                    CustomerId = "ad183560-7a60-4a72-ad86-cdc908f24d6b",
+                    DriverId = "d7857ddd-8da9-43e7-bc2e-0d590e0b9717",
+                    ArtpieceId = "333DFCB6",
+                    ExhibitionId = 1,
+                    Adress = "Test",
+                    Status = DeliveryStatus.ApprovedByDriver,
+                    UpdatedOn = DateTimeOffset.UtcNow
+                },
+            };
+
+            context.Orders.AddRange(orders);
 
             await context.SaveChangesAsync();
         }

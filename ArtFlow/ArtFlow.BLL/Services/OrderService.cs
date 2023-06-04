@@ -76,7 +76,7 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task AddOrderAsync(Order order)
+        public async Task<Order> AddOrderAsync(Order order)
         {
             if (!this._orderValidator.Validate(order))
             {
@@ -92,6 +92,25 @@ namespace ArtFlow.BLL.Services
 
                 this._orderRepository.Add(order);
                 await this._orderRepository.SaveChangesAsync();
+
+                Order added = await this._orderRepository
+                    .GetAll()
+                    .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
+                    .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
+                    .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
+                    .Include(e => e.Exhibition)
+                    .OrderByDescending(o => o.UpdatedOn)
+                    .FirstOrDefaultAsync(o =>
+                        o.ArtpieceId.Equals(order.ArtpieceId));
+
+                return added;
             }
             catch (Exception ex)
             {
@@ -114,7 +133,7 @@ namespace ArtFlow.BLL.Services
                     .AsNoTracking()
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
-                order.Status = DeliveryStatus.ApprovedbyOwner;
+                order.Status = DeliveryStatus.ApprovedByOwner;
                 order.UpdatedOn = DateTimeOffset.UtcNow;
 
                 this._orderRepository.Update(order);
@@ -135,11 +154,15 @@ namespace ArtFlow.BLL.Services
                 List<Order> orders = await this._orderRepository
                     .GetAll()
                     .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
                     .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
                     .Include(a => a.Artpiece)
                         .ThenInclude(k => k.KeepRecommendation)
                     .Include(e => e.Exhibition)
-                    .Where(o => o.Status == DeliveryStatus.ApprovedbyOwner)
+                    .Where(o => o.Status == DeliveryStatus.ApprovedByOwner)
                     .ToListAsync();
                 return orders;
             }
@@ -164,11 +187,16 @@ namespace ArtFlow.BLL.Services
                 List<Order> orders = await this._orderRepository
                     .GetAll()
                     .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
                     .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
                     .Include(a => a.Artpiece)
                         .ThenInclude(k => k.KeepRecommendation)
                     .Include(e => e.Exhibition)
                     .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
                     .OrderByDescending(o => o.UpdatedOn)
                     .Where(o => o.DriverId.Equals(driverId))
                     .ToListAsync();
@@ -195,11 +223,16 @@ namespace ArtFlow.BLL.Services
                 List<Order> orders = await this._orderRepository
                     .GetAll()
                     .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
                     .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
                     .Include(a => a.Artpiece)
                         .ThenInclude(k => k.KeepRecommendation)
                     .Include(e => e.Exhibition)
                     .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
                     .OrderByDescending(o => o.UpdatedOn)
                     .Where(o => o.ExhibitionId.Equals(exhibitionId))
                     .ToListAsync();
@@ -224,13 +257,53 @@ namespace ArtFlow.BLL.Services
                 Order order = await this._orderRepository
                     .GetAll()
                     .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
                     .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
                     .Include(a => a.Artpiece)
                         .ThenInclude(k => k.KeepRecommendation)
                     .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
                     .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
+                return order;
+            }
+            catch (Exception ex)
+            {
+                this._logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<Order> GetOrderByArtpieceAsync(string artpieceId)
+        {
+            if (string.IsNullOrEmpty(artpieceId))
+            {
+                throw new ArgumentNullException("Artpiece id must not be null");
+            }
+
+            try
+            {
+                Order order = await this._orderRepository
+                    .GetAll()
+                    .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
+                    .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(k => k.KeepRecommendation)
+                    .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
+                    .Include(e => e.Exhibition)
+                    .OrderByDescending(o => o.UpdatedOn)
+                    .FirstOrDefaultAsync(o => 
+                        o.ArtpieceId.Equals(artpieceId));
+
                 return order;
             }
             catch (Exception ex)
@@ -254,10 +327,15 @@ namespace ArtFlow.BLL.Services
                 List<Order> orders = await this._orderRepository
                     .GetAll()
                     .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
                     .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
                     .Include(a => a.Artpiece)
                         .ThenInclude(k => k.KeepRecommendation)
                     .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
                     .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
                     .Where(o => o.CustomerId.Equals(organiserId))
@@ -285,10 +363,15 @@ namespace ArtFlow.BLL.Services
                 List<Order> orders = await this._orderRepository
                     .GetAll()
                     .Include(s => s.Seller)
+                        .ThenInclude(p => p.Photo)
                     .Include(c => c.Customer)
+                        .ThenInclude(p => p.Photo)
+                    .Include(a => a.Artpiece)
+                        .ThenInclude(p => p.Photo)
                     .Include(a => a.Artpiece)
                         .ThenInclude(k => k.KeepRecommendation)
                     .Include(d => d.Driver)
+                        .ThenInclude(p => p.Photo)
                     .Include(e => e.Exhibition)
                     .OrderByDescending(o => o.UpdatedOn)
                     .Where(o => o.SellerId.Equals(ownerId))
@@ -316,7 +399,7 @@ namespace ArtFlow.BLL.Services
                     .AsNoTracking()
                     .FirstOrDefaultAsync(o => o.OrderId == orderId);
 
-                order.Status = DeliveryStatus.Cancel;
+                order.Status = DeliveryStatus.Canceled;
                 order.UpdatedOn = DateTimeOffset.UtcNow;
 
                 this._orderRepository.Update(order);
@@ -424,7 +507,7 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task SetOrderPaidAsync(int orderId)
+        /*public async Task SetOrderPaidAsync(int orderId)
         {
             if (orderId <= 0)
             {
@@ -450,7 +533,7 @@ namespace ArtFlow.BLL.Services
                 this._logger.LogError(ex.Message);
                 throw;
             }
-        }
+        }*/
 
         public async Task SetOrderReturnedAsync(int orderId)
         {

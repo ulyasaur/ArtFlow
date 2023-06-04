@@ -6,7 +6,7 @@ namespace ArtFlow.ViewModels
     {
         public int KeepRecommendationId { get; set; }
 
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
         public double MinTemperature { get; set; }
 

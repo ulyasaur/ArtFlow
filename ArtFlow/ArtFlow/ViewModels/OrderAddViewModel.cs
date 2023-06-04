@@ -5,7 +5,7 @@ namespace ArtFlow.ViewModels
 {
     public class OrderAddViewModel
     {
-        public int ArtpieceId { get; set; }
+        public string ArtpieceId { get; set; }
 
         public int ExhibitionId { get; set; }
 

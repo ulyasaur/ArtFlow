@@ -1,5 +1,6 @@
 ﻿using ArtFlow.BLL.DTOs;
 using ArtFlow.Core.Entities;
+using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,12 +19,16 @@ namespace ArtFlow.BLL.Abstractions
 
         Task<List<Artpiece>> GetRoomArtpiecesAsync(int roomId);
 
-        Task<Artpiece> GetArtpieceAsync(int artpieceId);
+        Task<List<Artpiece>> GetRoomAvailableArtpiecesAsync(int exhibitionId);
 
-        Task AddArtpieceAsync(ArtpieceDto artpieceDto);
+        Task<Artpiece> GetArtpieceAsync(string artpieceId);
 
-        Task UpdateArtpieceAsync(ArtpieceDto artpieceDto);
+        Task<Artpiece> AddArtpieceAsync(ArtpieceDto artpieceDto);
 
-        Task DeleteArtpieceAsync(int artpieceId);
+        Task<Artpiece> UpdateArtpieceAsync(ArtpieceDto artpieceDto);
+
+        Task<Photo> UpdateArtpiecePictureAsync(string artpieceId, IFormFile file);
+
+        Task DeleteArtpieceAsync(string artpieceId);
     }
 }

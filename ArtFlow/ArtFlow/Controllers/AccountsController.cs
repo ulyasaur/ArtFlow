@@ -71,7 +71,7 @@ namespace ArtFlow.Controllers
                     return Ok();
                 }
 
-                return BadRequest("User with such email already exists");
+                return BadRequest("User with such email or username already exists");
             }
             catch (Exception ex)
             {
@@ -92,6 +92,8 @@ namespace ArtFlow.Controllers
                 UserViewModel userViewModel = new UserViewModel();
 
                 this._mapper.Map(user, userViewModel);
+
+                userViewModel.Role = await this._userService.GetUserRoleAsync(userId);
 
                 return Ok(userViewModel);
             }

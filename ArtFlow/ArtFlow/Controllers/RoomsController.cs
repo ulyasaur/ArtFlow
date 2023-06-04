@@ -77,9 +77,12 @@ namespace ArtFlow.Controllers
                 Room room = new Room();
                 this._mapper.Map(roomAddViewModel, room);
 
-                await this._roomService.AddRoomAsync(room);
+                Room added = await this._roomService.AddRoomAsync(room);
 
-                return Ok();
+                RoomViewModel addedViewModel = new RoomViewModel();
+                this._mapper.Map(added, addedViewModel);
+
+                return Ok(addedViewModel);
             }
             catch (Exception ex)
             {
@@ -109,7 +112,7 @@ namespace ArtFlow.Controllers
 
         [Authorize(Roles = "Organiser")]
         [HttpPost("{roomId}/{artpieceId}")]
-        public async Task<IActionResult> AddArtpieceToRoomRoom(int roomId, int artpieceId)
+        public async Task<IActionResult> AddArtpieceToRoomRoom(int roomId, string artpieceId)
         {
             try
             {
@@ -127,7 +130,7 @@ namespace ArtFlow.Controllers
 
         [Authorize(Roles = "Organiser")]
         [HttpDelete("{roomId}/{artpieceId}")]
-        public async Task<IActionResult> DeleteArtpieceFromRoomRoom(int roomId, int artpieceId)
+        public async Task<IActionResult> DeleteArtpieceFromRoomRoom(int roomId, string artpieceId)
         {
             try
             {

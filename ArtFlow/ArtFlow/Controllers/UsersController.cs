@@ -29,7 +29,7 @@ namespace ArtFlow.Controllers
             _logger = logger;
         }
 
-        [HttpGet("{userId}")]
+        [HttpGet("id/{userId}")]
         public async Task<IActionResult> GetUserById(string userId)
         {
             try
@@ -39,6 +39,31 @@ namespace ArtFlow.Controllers
                 UserViewModel profile = new UserViewModel();
 
                 this._mapper.Map(user, profile);
+
+                profile.Role = await this._userService.GetUserRoleAsync(userId);
+
+                return Ok(profile);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }        
+
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetUserByUsername(string username)
+        {
+            try
+            {
+                User user = await this._userService.GetUserByUsernameAsync(username);
+
+                UserViewModel profile = new UserViewModel();
+
+                this._mapper.Map(user, profile);
+
+                profile.Role = await this._userService.GetUserRoleAsync(user.Id);
 
                 return Ok(profile);
             }
@@ -64,6 +89,28 @@ namespace ArtFlow.Controllers
                 await this._userService.UpdateUserAsync(user);
 
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [HttpPost("profilePicture")]
+        public async Task<IActionResult> SetProfilePicture(IFormFile file)
+        {
+            try
+            {
+                string userId = this._userAccessor.GetUserId();
+
+                Photo photo = await this._userService.SetProfilePicture(userId, file);
+
+                PhotoViewModel photoViewModel = new PhotoViewModel();
+                this._mapper.Map(photo, photoViewModel);
+
+                return Ok(photoViewModel);
             }
             catch (Exception ex)
             {

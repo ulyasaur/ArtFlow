@@ -5,11 +5,13 @@ using ArtFlow.Core.Entities;
 using ArtFlow.Core.Enums;
 using ArtFlow.DAL.Abstractions;
 using ArtFlow.DAL.Photos.Abstractions;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Linq;
@@ -44,7 +46,7 @@ namespace ArtFlow.BLL.Services
             _keepRecommendationValidator = new KeepRecommendationValidator();
         }
 
-        public async Task AddArtpieceAsync(ArtpieceDto artpieceDto)
+        public async Task<Artpiece> AddArtpieceAsync(ArtpieceDto artpieceDto)
         {
             Artpiece artpiece = new Artpiece
             {
@@ -61,7 +63,7 @@ namespace ArtFlow.BLL.Services
                     MinLight = artpieceDto.MinLight,
                     MaxLight = artpieceDto.MaxLight
                 }
-            };
+            };            
 
             if(!this._artpieceValidator.Validate(artpiece))
             {
@@ -75,12 +77,33 @@ namespace ArtFlow.BLL.Services
 
             try
             {
+                string id;
+                Artpiece existing = new Artpiece();
+
+                do
+                {
+                    id = GenerateRandomString();
+                    existing = await this._artpieceRepository.FindByIdAsync(id);
+                } while (existing is not null);
+
+                artpiece.ArtpieceId = id;
+
                 User user = await this._userRepository.FindByIdAsync(artpiece.OwnerId);
 
                 artpiece.Photo = await this._photoAccessor.AddPhoto(artpieceDto.Photo);
 
                 this._artpieceRepository.Add(artpiece);
                 await this._artpieceRepository.SaveChangesAsync();
+
+                Artpiece added = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
+                    .Include(k => k.KeepRecommendation)
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(id));
+
+                return added;
             }
             catch (Exception ex)
             {
@@ -89,11 +112,11 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task DeleteArtpieceAsync(int artpieceId)
+        public async Task DeleteArtpieceAsync(string artpieceId)
         {
-            if (artpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             try
@@ -110,11 +133,11 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task<Artpiece> GetArtpieceAsync(int artpieceId)
+        public async Task<Artpiece> GetArtpieceAsync(string artpieceId)
         {
-            if (artpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             try
@@ -123,8 +146,9 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p =>  p.Photo)
                     .Include(k => k.KeepRecommendation)
-                    .FirstOrDefaultAsync(a => a.ArtpieceId == artpieceId);
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceId));
 
                 return artpiece;
             }
@@ -150,8 +174,9 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
-                    .Where(a => a.OwnerId == ownerId)
+                    .Where(a => a.OwnerId.Equals(ownerId))
                     .ToListAsync();
 
                 return artpieces;
@@ -171,6 +196,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .Include(o => o.Orders)
                     .Where(a => !a.Orders.Any() 
@@ -179,7 +205,10 @@ namespace ArtFlow.BLL.Services
                             .FirstOrDefault().Status == DeliveryStatus.Returned
                         || a.Orders
                             .OrderByDescending(o => o.UpdatedOn)
-                            .FirstOrDefault().Status == DeliveryStatus.Declined)
+                            .FirstOrDefault().Status == DeliveryStatus.Declined
+                        || a.Orders
+                            .OrderByDescending(o => o.UpdatedOn)
+                            .FirstOrDefault().Status == DeliveryStatus.Canceled)
                     .ToListAsync();
                 return artpieces;
             }
@@ -205,6 +234,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .Include(ea => ea.ExhibitionArtpieces)
                     .Where(a => a.ExhibitionArtpieces.Any(ea => ea.ExhibitionId == exhibitionId))
@@ -233,6 +263,7 @@ namespace ArtFlow.BLL.Services
                     .GetAll()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
                     .Include(ra => ra.RoomArtpieces)
                     .Where(a => a.RoomArtpieces.Any(ra => ra.RoomId == roomId))
@@ -246,11 +277,11 @@ namespace ArtFlow.BLL.Services
             }
         }
 
-        public async Task UpdateArtpieceAsync(ArtpieceDto artpieceDto)
+        public async Task<Artpiece> UpdateArtpieceAsync(ArtpieceDto artpieceDto)
         {
-            if (artpieceDto.ArtpieceId <= 0)
+            if (string.IsNullOrEmpty(artpieceDto.ArtpieceId))
             {
-                throw new ArgumentNullException("Artpiece id must be greater than 0");
+                throw new ArgumentNullException("Artpiece id must not be null");
             }
 
             if (artpieceDto.KeepRecommendationId <= 0)
@@ -294,8 +325,9 @@ namespace ArtFlow.BLL.Services
                     .AsNoTracking()
                     .Include(p => p.Photo)
                     .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
                     .Include(k => k.KeepRecommendation)
-                    .FirstOrDefaultAsync(a => a.ArtpieceId == artpieceDto.ArtpieceId);
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceDto.ArtpieceId));
 
                 existingArtpiece.Name = artpiece.Name;
                 existingArtpiece.Description = artpiece.Description;
@@ -309,10 +341,107 @@ namespace ArtFlow.BLL.Services
 
                 this._artpieceRepository.Update(existingArtpiece);
                 await this._artpieceRepository.SaveChangesAsync();
+
+                Artpiece updated = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
+                    .Include(k => k.KeepRecommendation)
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceDto.ArtpieceId));
+
+                return updated;
             }
             catch (Exception ex)
             {
                 this._logger.LogError(ex.Message);
+                throw;
+            }
+        }
+
+        public async Task<Photo> UpdateArtpiecePictureAsync(string artpieceId, IFormFile file)
+        {
+            if (string.IsNullOrEmpty(artpieceId))
+            {
+                throw new ArgumentNullException("Artpiece id must not be null");
+            }
+
+            try
+            {
+                Artpiece artpiece = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .FirstOrDefaultAsync(a => a.ArtpieceId.Equals(artpieceId));
+
+                Photo photo = await this._photoAccessor.AddPhoto(file);
+
+                if (artpiece.Photo is not null)
+                {
+                    await this._photoAccessor.DeletePhoto(artpiece.Photo.PhotoId);
+                }
+
+                artpiece.Photo = photo;
+
+                this._artpieceRepository.Update(artpiece);
+                await this._artpieceRepository.SaveChangesAsync();
+
+                return photo;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+                return null;
+            }
+        }
+
+        public static string GenerateRandomString()
+        {
+            const string validChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"; StringBuilder sb = new StringBuilder();
+            using (RandomNumberGenerator rng = RandomNumberGenerator.Create())
+            {
+                byte[] uintBuffer = new byte[sizeof(uint)];
+                for (int i = 0; i < 8; i++)
+                {
+                    rng.GetBytes(uintBuffer);
+                    uint num = BitConverter.ToUInt32(uintBuffer, 0); int index = (int)(num % validChars.Length);
+                    sb.Append(validChars[index]);
+                }
+            }
+            return sb.ToString();
+        }
+
+        public async Task<List<Artpiece>> GetRoomAvailableArtpiecesAsync(int exhibitionId)
+        {
+            if (exhibitionId <= 0)
+            {
+                throw new ArgumentNullException("Exhibition id must be greater than 0");
+            }
+
+            try
+            {
+                List<int> roomIds = await this._exhibitionRepository
+                    .GetAll()
+                    .Include(r => r.Rooms)
+                    .Where(e => e.ExhibitionId == exhibitionId)
+                    .SelectMany(r => r.Rooms)
+                    .Select(r => r.RoomId)
+                    .ToListAsync();
+
+                List<Artpiece> artpieces = await this._artpieceRepository
+                    .GetAll()
+                    .Include(p => p.Photo)
+                    .Include(o => o.Owner)
+                        .ThenInclude(p => p.Photo)
+                    .Include(k => k.KeepRecommendation)
+                    .Include(ea => ea.RoomArtpieces)
+                    .Include(ea => ea.ExhibitionArtpieces)
+                    .Where(a => !a.RoomArtpieces.Any(ra => roomIds.Contains(ra.RoomId)) && a.ExhibitionArtpieces.Any(ea => ea.ExhibitionId == exhibitionId))
+                    .ToListAsync();
+                return artpieces;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
                 throw;
             }
         }
